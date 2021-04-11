@@ -7,6 +7,7 @@ class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
+
 class _HomePageState extends State<HomePage> {
   int _selectedNavigationIndex = 0;
 
@@ -18,17 +19,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            context.read<AuthenticationService>().signOut();
-          },
-          child: Text('sign out'),
-        )
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const<BottomNavigationBarItem> [
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+        onTap: _navigationSelect,
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
@@ -42,10 +36,21 @@ class _HomePageState extends State<HomePage> {
             label: 'Archived',
           ),
         ],
-        currentIndex: _selectedNavigationIndex,
-        selectedItemColor: Color.fromARGB(200, 255, 0, 0),
-        onTap: _navigationSelect,
       ),
+      tabBuilder: (context, index) {
+        return CupertinoPageScaffold(
+            child: Center(
+                child: CupertinoButton(
+          onPressed: () {
+            context.read<AuthenticationService>().signOut();
+          },
+          child: const Text(
+            'sign out',
+            style: TextStyle(color: CupertinoColors.white),
+          ),
+          color: CupertinoColors.activeBlue,
+        )));
+      },
     );
   }
 }

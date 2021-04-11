@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:flutter/cupertino.dart';
 
 class AuthenticationService {
   final FirebaseAuth _authenticator;
@@ -19,28 +19,22 @@ class AuthenticationService {
   //   }
   // }
 
-  Future<void> createUserWithEmailAndPassword(String email, String password) async {
-    try {
-      await _authenticator.createUserWithEmailAndPassword(
-          email: email,
-          password: password
-      );
-    }
-    catch(e) {
-      print(e.message);
-    }
+  Future<void> createUserWithEmail(
+      BuildContext context, String email, String password) async {
+    await _authenticator.createUserWithEmailAndPassword(
+        email: email, password: password);
   }
 
-  Future<void> signInWithEmail(String email, String password) async {
-    try {
-      await _authenticator.signInWithEmailAndPassword(
-          email: email,
-          password: password
-      );
+  Future<bool> signInWithEmail(
+      BuildContext context, String email, String password) async {
+    var isSignedIn = false;
+    await _authenticator.signInWithEmailAndPassword(
+        email: email, password: password);
+
+    if (_authenticator.currentUser != null) {
+      isSignedIn = true;
     }
-    catch(e) {
-      print(e.message);
-    }
+    return isSignedIn;
   }
 
   Future<void> signOut() async {
