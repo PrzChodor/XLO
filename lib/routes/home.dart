@@ -1,56 +1,46 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
+import 'package:xlo_auction_app/routes/add_auction.dart';
+import 'package:xlo_auction_app/routes/archive_auction.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  int _selectedNavigationIndex = 0;
-
-  void _navigationSelect(int index) {
-    setState(() {
-      _selectedNavigationIndex = index;
-    });
-  }
+class HomePage extends StatelessWidget {
+  final List<Widget> _pages = [AddAuction(), ArchiveAuction()];
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabScaffold(
-      tabBar: CupertinoTabBar(
-        onTap: _navigationSelect,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+    return MultiProvider(
+        providers: [
+          Provider<FirebaseFirestore>(
+            create: (_) => FirebaseFirestore.instance,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.playlist_add),
-            label: 'Add Auction',
+          Provider<FirebaseStorage>(
+            create: (_) => FirebaseStorage.instance,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.playlist_add_check),
-            label: 'Archived',
+          Provider<AuthenticationService>(
+            create: (_) => AuthenticationService(),
           ),
         ],
-      ),
-      tabBuilder: (context, index) {
-        return CupertinoPageScaffold(
-            child: Center(
-                child: CupertinoButton(
-          onPressed: () {
-            context.read<AuthenticationService>().signOut();
-          },
-          child: const Text(
-            'sign out',
-            style: TextStyle(color: CupertinoColors.white),
+        child: CupertinoTabScaffold(
+          tabBar: CupertinoTabBar(
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.playlist_add),
+                label: 'Add Auction',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.playlist_add_check),
+                label: 'Archived',
+              ),
+            ],
           ),
-          color: CupertinoColors.activeBlue,
-        )));
-      },
-    );
+          tabBuilder: (context, index) {
+            return _pages[index];
+          },
+        ));
   }
 }

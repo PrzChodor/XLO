@@ -1,21 +1,23 @@
 import 'package:flutter/cupertino.dart';
 
-void showAuthenticationErrorDialog(BuildContext context, String errorMessage) {
+void showAuthenticationNotification(
+    BuildContext context, String errorTitle, String errorMessage) {
   showCupertinoDialog(
       context: context,
       builder: (context) {
-        return AuthenticationErrorDialog(errorMessage);
+        return AuthenticationNotificationDialog(errorTitle, errorMessage);
       });
 }
 
-class AuthenticationErrorDialog extends StatelessWidget {
+class AuthenticationNotificationDialog extends StatelessWidget {
+  final errorTitle;
   final errorMessage;
-  AuthenticationErrorDialog(this.errorMessage);
+  AuthenticationNotificationDialog(this.errorTitle, this.errorMessage);
 
   @override
   Widget build(BuildContext context) {
     return CupertinoAlertDialog(
-      title: const Text('Error'),
+      title: Text(errorTitle),
       content: Text(errorMessage),
       actions: [
         CupertinoButton(

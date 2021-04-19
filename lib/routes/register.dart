@@ -3,12 +3,24 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
-import 'package:xlo_auction_app/authentication/authenticationError.dart';
+import 'package:xlo_auction_app/authentication/authenticationNotification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class Register extends StatelessWidget {
+class Register extends StatefulWidget {
+  @override
+  _RegisterState createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,22 +43,7 @@ class Register extends StatelessWidget {
               obscureText: true,
             ),
             CupertinoButton(
-              onPressed: () async {
-                try {
-                  await context
-                      .read<AuthenticationService>()
-                      .createUserWithEmail(
-                        context,
-                        emailController.text,
-                        passwordController.text,
-                      );
-                } on FirebaseAuthException catch (e) {
-                  showAuthenticationErrorDialog(
-                    context,
-                    e.message,
-                  );
-                }
-              },
+              onPressed: () => _createUserWithEmail(context),
               child: const Text('Register'),
             ),
             RichText(
@@ -74,5 +71,21 @@ class Register extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _createUserWithEmail(BuildContext context) async {
+    try {
+      await context.read<AuthenticationService>().createUserWithEmail(
+            context,
+            emailController.text,
+            passwordController.text,
+          );
+    } on FirebaseAuthException catch (e) {
+      showAuthenticationNotification(
+        context,
+        'Error',
+        e.message,
+      );
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<AuthenticationService>(
-          create: (_) => AuthenticationService(FirebaseAuth.instance),
+          create: (_) => AuthenticationService(),
         ),
         StreamProvider(
           create: (context) =>
@@ -40,8 +41,6 @@ class MyApp extends StatelessWidget {
 }
 
 class AuthenticationWrapper extends StatelessWidget {
-  const AuthenticationWrapper({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
