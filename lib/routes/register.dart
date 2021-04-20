@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
-import 'package:xlo_auction_app/authentication/authenticationNotification.dart';
+import 'package:xlo_auction_app/authentication/notification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Register extends StatefulWidget {
@@ -35,11 +35,11 @@ class _RegisterState extends State<Register> {
             ),
             CupertinoTextField(
               controller: emailController,
-              placeholder: 'email',
+              placeholder: 'E-Mail',
             ),
             CupertinoTextField(
               controller: passwordController,
-              placeholder: 'password',
+              placeholder: 'Password',
               obscureText: true,
             ),
             CupertinoButton(
@@ -81,7 +81,7 @@ class _RegisterState extends State<Register> {
             passwordController.text,
           );
     } on FirebaseAuthException catch (e) {
-      showAuthenticationNotification(
+      showNotification(
         context,
         'Error',
         e.message,

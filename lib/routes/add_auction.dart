@@ -8,6 +8,10 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
+import 'package:xlo_auction_app/authentication/notification.dart';
+import 'package:uuid/uuid.dart';
+
+var uuid = Uuid();
 
 class AddAuction extends StatefulWidget {
   @override
@@ -29,39 +33,35 @@ class _AddAuctionState extends State<AddAuction> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabView(
-      builder: (context) {
-        return CupertinoPageScaffold(
-          navigationBar: CupertinoNavigationBar(
-            middle: Text('co jest?'),
-          ),
-          child: SafeArea(
-            child: Column(
-              children: [
-                CupertinoTextField(
-                  controller: titleController,
-                  placeholder: 'title',
-                ),
-                CupertinoTextField(
-                  controller: descriptionController,
-                  placeholder: 'description',
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 8,
-                ),
-                CupertinoButton(
-                  child: Text('pick images'),
-                  onPressed: () => loadAssets(),
-                ),
-                Expanded(child: buildGridView()),
-                CupertinoButton(
-                  child: Text('add auction'),
-                  onPressed: () => addAuction(context),
-                ),
-              ],
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text('Add auction'),
+      ),
+      child: SafeArea(
+        child: Column(
+          children: [
+            CupertinoTextField(
+              controller: titleController,
+              placeholder: 'Title',
             ),
-          ),
-        );
-      },
+            CupertinoTextField(
+              controller: descriptionController,
+              placeholder: 'Description',
+              keyboardType: TextInputType.multiline,
+              maxLines: 8,
+            ),
+            CupertinoButton(
+              child: Text('Add images'),
+              onPressed: () => loadAssets(),
+            ),
+            Expanded(child: buildGridView()),
+            CupertinoButton(
+              child: Text('Add auction'),
+              onPressed: () => addAuction(context),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -75,8 +75,8 @@ class _AddAuctionState extends State<AddAuction> {
         selectedAssets: images,
         cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
         materialOptions: MaterialOptions(
-          actionBarColor: "#abcdef",
-          actionBarTitle: "Example App",
+          actionBarColor: '#2196f3',
+          actionBarTitle: "Choose photos",
           allViewTitle: "All Photos",
           useDetailsView: false,
           selectCircleStrokeColor: "#000000",
@@ -114,18 +114,20 @@ class _AddAuctionState extends State<AddAuction> {
 
     await uploadImages(context);
 
-    CollectionReference _userAuctions = _firestore
-        .collection('users')
-        .doc(_auth.getCurrentUserId())
-        .collection('auctions');
+    CollectionReference _auctions = _firestore.collection('auctions');
 
-    final documentSnapshot = await _userAuctions.add({
+    final documentSnapshot = await _auctions.add({
       'title': titleController.text,
       'description': descriptionController.text,
-      'email': _auth.getCurrentUserEmail()
+      'ownerID': _auth.getCurrentUserId(),
+      'email': _auth.getCurrentUserEmail(),
+      'date': DateTime.now(),
+      'archived': false
     });
 
     documentSnapshot.update({'images': FieldValue.arrayUnion(imageUrls)});
+    Navigator.pop(context);
+    showNotification(context, 'Success', 'Auction added successfully');
   }
 
   Future<void> uploadImages(BuildContext context) async {
@@ -134,13 +136,11 @@ class _AddAuctionState extends State<AddAuction> {
     final loggedUser = _auth.getCurrentUserId();
 
     for (var imageAsset in images) {
-      final imageName = imageAsset.name;
+      final imageName = uuid.v4();
       File imageFile = await getImageFileFromAssets(imageAsset);
 
-      final taskSnapshot = await _storage
-          .ref()
-          .child('$loggedUser/$imageName')
-          .putFile(imageFile);
+      final taskSnapshot =
+          await _storage.ref('$loggedUser/$imageName').putFile(imageFile);
 
       final imageUrl = await taskSnapshot.ref.getDownloadURL();
 

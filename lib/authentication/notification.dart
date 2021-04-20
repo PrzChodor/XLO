@@ -1,18 +1,18 @@
 import 'package:flutter/cupertino.dart';
 
-void showAuthenticationNotification(
+void showNotification(
     BuildContext context, String errorTitle, String errorMessage) {
   showCupertinoDialog(
       context: context,
       builder: (context) {
-        return AuthenticationNotificationDialog(errorTitle, errorMessage);
+        return NotificationDialog(errorTitle, errorMessage);
       });
 }
 
-class AuthenticationNotificationDialog extends StatelessWidget {
+class NotificationDialog extends StatelessWidget {
   final errorTitle;
   final errorMessage;
-  AuthenticationNotificationDialog(this.errorTitle, this.errorMessage);
+  NotificationDialog(this.errorTitle, this.errorMessage);
 
   @override
   Widget build(BuildContext context) {

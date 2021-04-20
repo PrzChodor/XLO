@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:xlo_auction_app/authentication/authenticationNotification.dart';
+import 'package:xlo_auction_app/authentication/notification.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -62,7 +62,7 @@ class _SignInState extends State<SignIn> {
         passwordController.text,
       );
     } on FirebaseAuthException catch (e) {
-      showAuthenticationNotification(
+      showNotification(
         context,
         'Error',
         e.message,
@@ -72,7 +72,7 @@ class _SignInState extends State<SignIn> {
       Navigator.pop(context);
       Navigator.popAndPushNamed(context, '/');
       if (!authentication.isEmailVerified) {
-        showAuthenticationNotification(context, 'Verify email', 'Verify email');
+        showNotification(context, 'Verify email', 'Verify email');
       }
     }
   }

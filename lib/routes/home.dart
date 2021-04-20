@@ -5,11 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
-import 'package:xlo_auction_app/routes/add_auction.dart';
 import 'package:xlo_auction_app/routes/archive_auction.dart';
+import 'package:xlo_auction_app/routes/auction_list.dart';
 
 class HomePage extends StatelessWidget {
-  final List<Widget> _pages = [AddAuction(), ArchiveAuction()];
+  final List<Widget> _pages = [AuctionList(), ArchiveAuction()];
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +29,11 @@ class HomePage extends StatelessWidget {
           tabBar: CupertinoTabBar(
             items: const [
               BottomNavigationBarItem(
-                icon: Icon(Icons.playlist_add),
-                label: 'Add Auction',
+                icon: Icon(CupertinoIcons.list_bullet),
+                label: 'Auctions',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.playlist_add_check),
+                icon: Icon(CupertinoIcons.archivebox),
                 label: 'Archived',
               ),
             ],
