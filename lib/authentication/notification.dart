@@ -21,7 +21,7 @@ class NotificationDialog extends StatelessWidget {
       content: Text(errorMessage),
       actions: [
         CupertinoButton(
-          child: const Text('ok'),
+          child: const Text('Ok'),
           onPressed: () => Navigator.pop(context),
         ),
       ],

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -38,28 +39,43 @@ class _AddAuctionState extends State<AddAuction> {
         middle: Text('Add auction'),
       ),
       child: SafeArea(
-        child: Column(
-          children: [
-            CupertinoTextField(
-              controller: titleController,
-              placeholder: 'Title',
-            ),
-            CupertinoTextField(
-              controller: descriptionController,
-              placeholder: 'Description',
-              keyboardType: TextInputType.multiline,
-              maxLines: 8,
-            ),
-            CupertinoButton(
-              child: Text('Add images'),
-              onPressed: () => loadAssets(),
-            ),
-            Expanded(child: buildGridView()),
-            CupertinoButton(
-              child: Text('Add auction'),
-              onPressed: () => addAuction(context),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CupertinoTextField(
+                  controller: titleController,
+                  placeholder: 'Title',
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CupertinoTextField(
+                  controller: descriptionController,
+                  placeholder: 'Description',
+                  keyboardType: TextInputType.multiline,
+                  minLines: 1,
+                  maxLines: 8,
+                ),
+              ),
+              CupertinoButton(
+                child: Text('Add images'),
+                onPressed: () => loadAssets(),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: buildGridView(),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CupertinoButton.filled(
+                  child: Text('Add auction'),
+                  onPressed: () => addAuction(context),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -94,7 +110,10 @@ class _AddAuctionState extends State<AddAuction> {
   Widget buildGridView() {
     if (images != null)
       return GridView.count(
-        crossAxisCount: 4,
+        primary: false,
+        shrinkWrap: true,
+        crossAxisCount: 3,
+        crossAxisSpacing: 8.0,
         children: List.generate(images.length, (index) {
           Asset asset = images[index];
           return AssetThumb(
@@ -125,8 +144,8 @@ class _AddAuctionState extends State<AddAuction> {
       'archived': false
     });
 
-    documentSnapshot.update({'images': FieldValue.arrayUnion(imageUrls)});
     Navigator.pop(context);
+    documentSnapshot.update({'images': FieldValue.arrayUnion(imageUrls)});
     showNotification(context, 'Success', 'Auction added successfully');
   }
 

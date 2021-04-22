@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +26,8 @@ class HomePage extends StatelessWidget {
         ],
         child: CupertinoTabScaffold(
           tabBar: CupertinoTabBar(
+            backgroundColor:
+                CupertinoTheme.of(context).barBackgroundColor.withOpacity(1.0),
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.list_bullet),

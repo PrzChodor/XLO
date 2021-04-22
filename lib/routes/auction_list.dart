@@ -18,55 +18,57 @@ class _AuctionListState extends State<AuctionList> {
     return CupertinoTabView(
       builder: (context) {
         return CupertinoPageScaffold(
-            child: CustomScrollView(
-          slivers: [
-            CupertinoSliverNavigationBar(
-              largeTitle: Text("Auctions"),
-            ),
-            SliverPersistentHeader(
-              delegate: SilverSearchBarDelegate(child: SearchBarAndAdd()),
-              pinned: true,
-              floating: false,
-            ),
-            StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('auctions')
-                    .where('archived', isEqualTo: false)
-                    .snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData) {
-                    return SliverFillRemaining(
-                      child: Center(
-                        child: CupertinoActivityIndicator(
-                          radius: min(MediaQuery.of(context).size.width * 0.2,
-                              MediaQuery.of(context).size.height * 0.2),
+            child: SafeArea(
+          child: CustomScrollView(
+            slivers: [
+              CupertinoSliverNavigationBar(
+                largeTitle: Text("Auctions"),
+              ),
+              SliverPersistentHeader(
+                delegate: SilverSearchBarDelegate(child: SearchBarAndAdd()),
+                pinned: true,
+                floating: false,
+              ),
+              StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('auctions')
+                      .where('archived', isEqualTo: false)
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return SliverFillRemaining(
+                        child: Center(
+                          child: CupertinoActivityIndicator(
+                            radius: min(MediaQuery.of(context).size.width * 0.2,
+                                MediaQuery.of(context).size.height * 0.2),
+                          ),
                         ),
-                      ),
-                    );
-                  }
+                      );
+                    }
 
-                  List<Auction> auctions = snapshot.data.docs
-                      .map<Auction>((a) => Auction(
-                          a['ownerID'],
-                          a['title'],
-                          a['description'],
-                          a['images'],
-                          a['date'],
-                          a['email'],
-                          a['archived']))
-                      .toList();
+                    List<Auction> auctions = snapshot.data.docs
+                        .map<Auction>((a) => Auction(
+                            a['ownerID'],
+                            a['title'],
+                            a['description'],
+                            a['images'],
+                            a['date'],
+                            a['email'],
+                            a['archived']))
+                        .toList();
 
-                  return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) => Material(
-                        child: ListTile(
-                      title: Text(auctions[index].title),
-                    )),
-                    childCount: auctions.length,
-                  ));
-                })
-          ],
+                    return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) => Material(
+                          child: ListTile(
+                        title: Text(auctions[index].title),
+                      )),
+                      childCount: auctions.length,
+                    ));
+                  })
+            ],
+          ),
         ));
       },
     );
