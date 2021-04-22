@@ -28,22 +28,36 @@ class _SignInState extends State<SignIn> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Login',
-              textScaleFactor: 2,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                'Login',
+                textScaleFactor: 2,
+              ),
             ),
-            CupertinoTextField(
-              controller: emailController,
-              placeholder: 'email',
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: CupertinoTextField(
+                controller: emailController,
+                placeholder: 'E-mail',
+              ),
             ),
-            CupertinoTextField(
-              controller: passwordController,
-              placeholder: 'password',
-              obscureText: true,
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: CupertinoTextField(
+                controller: passwordController,
+                placeholder: 'Password',
+                obscureText: true,
+              ),
             ),
-            CupertinoButton(
-              onPressed: () => _signInWithEmail(context),
-              child: const Text('Sign in'),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CupertinoButton.filled(
+                onPressed: () => _signInWithEmail(context),
+                child: const Text('Sign in'),
+              ),
             ),
           ],
         ),

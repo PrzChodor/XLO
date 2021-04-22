@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 
 void showNotification(
-    BuildContext context, String errorTitle, String errorMessage) {
+    BuildContext context, String title, String message) {
   showCupertinoDialog(
       context: context,
       builder: (context) {
-        return NotificationDialog(errorTitle, errorMessage);
+        return NotificationDialog(title, message);
       });
 }
 

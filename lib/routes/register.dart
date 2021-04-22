@@ -29,22 +29,36 @@ class _RegisterState extends State<Register> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Register',
-              textScaleFactor: 2,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                'Register',
+                textScaleFactor: 2,
+              ),
             ),
-            CupertinoTextField(
-              controller: emailController,
-              placeholder: 'E-Mail',
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: CupertinoTextField(
+                controller: emailController,
+                placeholder: 'E-Mail',
+              ),
             ),
-            CupertinoTextField(
-              controller: passwordController,
-              placeholder: 'Password',
-              obscureText: true,
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: CupertinoTextField(
+                controller: passwordController,
+                placeholder: 'Password',
+                obscureText: true,
+              ),
             ),
-            CupertinoButton(
-              onPressed: () => _createUserWithEmail(context),
-              child: const Text('Register'),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CupertinoButton.filled(
+                onPressed: () => _createUserWithEmail(context),
+                child: const Text('Register'),
+              ),
             ),
             RichText(
               text: TextSpan(

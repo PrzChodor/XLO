@@ -33,6 +33,7 @@ class _AuctionListState extends State<AuctionList> {
                   stream: FirebaseFirestore.instance
                       .collection('auctions')
                       .where('archived', isEqualTo: false)
+                      .orderBy('date', descending: true)
                       .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -40,8 +41,8 @@ class _AuctionListState extends State<AuctionList> {
                       return SliverFillRemaining(
                         child: Center(
                           child: CupertinoActivityIndicator(
-                            radius: min(MediaQuery.of(context).size.width * 0.2,
-                                MediaQuery.of(context).size.height * 0.2),
+                            radius: min(MediaQuery.of(context).size.width * 0.1,
+                                MediaQuery.of(context).size.height * 0.1),
                           ),
                         ),
                       );
