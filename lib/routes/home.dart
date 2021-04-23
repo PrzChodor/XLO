@@ -6,9 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:xlo_auction_app/routes/archive_auction.dart';
 import 'package:xlo_auction_app/routes/auction_list.dart';
+import 'package:xlo_auction_app/routes/chat.dart';
 
 class HomePage extends StatelessWidget {
-  final List<Widget> _pages = [AuctionList(), ArchiveAuction()];
+  final List<Widget> _pages = [AuctionList(), ArchiveAuction(), Chat()];
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +37,10 @@ class HomePage extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.archivebox),
                 label: 'Archived',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.chat_bubble),
+                label: 'Chat',
               ),
             ],
           ),
