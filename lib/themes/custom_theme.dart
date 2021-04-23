@@ -10,10 +10,9 @@ class CustomTheme {
           color: CupertinoColors.white, darkColor: CupertinoColors.black),
       scaffoldBackgroundColor: const CupertinoDynamicColor.withBrightness(
           color: CupertinoColors.extraLightBackgroundGray,
-          darkColor: CupertinoColors.black),
-      barBackgroundColor: const CupertinoDynamicColor.withBrightness(
-          color: CupertinoColors.white,
           darkColor: CupertinoColors.darkBackgroundGray),
+      barBackgroundColor: const CupertinoDynamicColor.withBrightness(
+          color: CupertinoColors.white, darkColor: CupertinoColors.black),
     );
   }
 }

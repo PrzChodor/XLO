@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:provider/provider.dart';
-import 'package:xlo_auction_app/routes/add_auction.dart';
+import 'package:flutter/services.dart';
 import 'package:xlo_auction_app/routes/register.dart';
 import 'package:xlo_auction_app/routes/signIn.dart';
 import 'package:xlo_auction_app/routes/home.dart';
@@ -36,7 +36,6 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => AuthenticationWrapper(),
           '/signIn': (context) => SignIn(),
-          '/add_auction': (context) => AddAuction(),
         },
       ),
     );
@@ -47,7 +46,9 @@ class AuthenticationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
-
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: CupertinoTheme.of(context).barBackgroundColor,
+        statusBarIconBrightness: CupertinoTheme.of(context).brightness));
     if (firebaseUser != null) {
       return HomePage();
     }
