@@ -171,13 +171,13 @@ class _AddAuctionState extends State<AddAuction> with ScreenLoader<AddAuction> {
               child: Container(
                 child: Icon(
                   Icons.add_photo_alternate_outlined,
-                  color: CupertinoColors.white,
+                  color: CupertinoTheme.of(context).primaryContrastingColor,
                   size: 64,
                 ),
                 width: 300,
                 height: 300,
                 decoration: BoxDecoration(
-                    color: CupertinoColors.activeBlue,
+                    color: CupertinoTheme.of(context).primaryColor,
                     borderRadius: BorderRadius.all(Radius.circular(8))),
               ),
               onTap: loadAssets,

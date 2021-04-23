@@ -30,10 +30,10 @@ class _SignInState extends State<SignIn> {
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text(
-                'Login',
-                textScaleFactor: 2,
-              ),
+              child: Text('Login',
+                  style: CupertinoTheme.of(context)
+                      .textTheme
+                      .navLargeTitleTextStyle),
             ),
             Padding(
               padding:

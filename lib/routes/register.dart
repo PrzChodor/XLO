@@ -31,10 +31,10 @@ class _RegisterState extends State<Register> {
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text(
-                'Register',
-                textScaleFactor: 2,
-              ),
+              child: Text('Register',
+                  style: CupertinoTheme.of(context)
+                      .textTheme
+                      .navLargeTitleTextStyle),
             ),
             Padding(
               padding:
@@ -64,13 +64,13 @@ class _RegisterState extends State<Register> {
               text: TextSpan(
                 text: 'Already have an account? ',
                 style: TextStyle(
-                  color: CupertinoColors.black,
+                  color: CupertinoTheme.of(context).textTheme.textStyle.color,
                 ),
                 children: [
                   TextSpan(
                     text: 'Sign in',
                     style: TextStyle(
-                      color: CupertinoColors.activeBlue,
+                      color: CupertinoTheme.of(context).primaryColor,
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () => Navigator.pushNamed(

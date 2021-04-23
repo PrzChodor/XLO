@@ -63,7 +63,12 @@ class AuctionItem extends StatelessWidget {
                 children: [
                   Align(
                     child: Text(title,
-                        style: new TextStyle(fontSize: 16),
+                        style: new TextStyle(
+                            fontSize: 16,
+                            color: CupertinoTheme.of(context)
+                                .textTheme
+                                .textStyle
+                                .color),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis),
                     alignment: Alignment.topLeft,
@@ -71,20 +76,35 @@ class AuctionItem extends StatelessWidget {
                   Align(
                     child: Text(
                       "$price zł",
-                      style: new TextStyle(
-                          fontSize: 16,
+                      style: TextStyle(
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: CupertinoColors.activeBlue),
+                          color: CupertinoTheme.of(context).primaryColor),
                     ),
                     alignment: Alignment.topLeft,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(place),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [Icon(Icons.history), Text(timeSince)])
+                      Text(
+                        place,
+                        style: TextStyle(
+                            color: CupertinoTheme.of(context)
+                                .textTheme
+                                .textStyle
+                                .color),
+                      ),
+                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                        Icon(Icons.history),
+                        Text(
+                          timeSince,
+                          style: TextStyle(
+                              color: CupertinoTheme.of(context)
+                                  .textTheme
+                                  .textStyle
+                                  .color),
+                        )
+                      ])
                     ],
                   ),
                 ],

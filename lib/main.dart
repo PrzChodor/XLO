@@ -3,9 +3,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:provider/provider.dart';
+import 'package:xlo_auction_app/routes/add_auction.dart';
 import 'package:xlo_auction_app/routes/register.dart';
 import 'package:xlo_auction_app/routes/signIn.dart';
 import 'package:xlo_auction_app/routes/home.dart';
+import 'package:xlo_auction_app/themes/custom_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,9 +32,11 @@ class MyApp extends StatelessWidget {
       child: CupertinoApp(
         title: 'XLO',
         initialRoute: '/',
+        theme: CustomTheme.customTheme,
         routes: {
           '/': (context) => AuthenticationWrapper(),
           '/signIn': (context) => SignIn(),
+          '/add_auction': (context) => AddAuction(),
         },
       ),
     );
