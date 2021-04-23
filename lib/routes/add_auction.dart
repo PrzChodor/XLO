@@ -10,7 +10,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
-import 'package:xlo_auction_app/authentication/notification.dart';
+import 'package:xlo_auction_app/widgets/notification.dart';
 import 'package:uuid/uuid.dart';
 import 'package:screen_loader/screen_loader.dart';
 
@@ -24,6 +24,8 @@ class AddAuction extends StatefulWidget {
 class _AddAuctionState extends State<AddAuction> with ScreenLoader<AddAuction> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
   List<Asset> images = <Asset>[];
   List<String> imageUrls = <String>[];
 
@@ -31,6 +33,8 @@ class _AddAuctionState extends State<AddAuction> with ScreenLoader<AddAuction> {
   void dispose() {
     titleController.dispose();
     descriptionController.dispose();
+    priceController.dispose();
+    locationController.dispose();
     super.dispose();
   }
 
@@ -60,6 +64,27 @@ class _AddAuctionState extends State<AddAuction> with ScreenLoader<AddAuction> {
                     keyboardType: TextInputType.multiline,
                     minLines: 1,
                     maxLines: 8,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CupertinoTextField(
+                    controller: locationController,
+                    placeholder: 'Location',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CupertinoTextField(
+                    controller: priceController,
+                    placeholder: 'Price',
+                    keyboardType: TextInputType.numberWithOptions(
+                      decimal: false,
+                      signed: false,
+                    ),
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
                   ),
                 ),
                 Padding(
@@ -168,6 +193,12 @@ class _AddAuctionState extends State<AddAuction> with ScreenLoader<AddAuction> {
     } else if (descriptionController.text.trim().isEmpty) {
       showNotification(context, "Error", "Enter description!");
       return;
+    } else if (locationController.text.trim().isEmpty) {
+      showNotification(context, "Error", "Enter location!");
+      return;
+    } else if (priceController.text.trim().isEmpty) {
+      showNotification(context, "Error", "Enter price!");
+      return;
     } else if (images.isEmpty) {
       showNotification(context, "Error", "Select atleast one image!");
       return;
@@ -188,7 +219,9 @@ class _AddAuctionState extends State<AddAuction> with ScreenLoader<AddAuction> {
           'email': _auth.getCurrentUserEmail(),
           'date': DateTime.now(),
           'archived': false,
-          'images': FieldValue.arrayUnion(imageUrls)
+          'images': FieldValue.arrayUnion(imageUrls),
+          'price': priceController.text,
+          'place': locationController.text.trim()
         })
         .then((value) => {
               showNotification(

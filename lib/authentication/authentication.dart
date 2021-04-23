@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:xlo_auction_app/authentication/notification.dart';
+import 'package:xlo_auction_app/widgets/notification.dart';
 
 class AuthenticationService {
   final FirebaseAuth _authenticator = FirebaseAuth.instance;
