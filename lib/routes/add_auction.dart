@@ -46,63 +46,69 @@ class _AddAuctionState extends State<AddAuction> with ScreenLoader<AddAuction> {
           middle: Text('Add auction'),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CupertinoTextField(
-                    controller: titleController,
-                    placeholder: 'Title',
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CupertinoTextField(
-                    controller: descriptionController,
-                    placeholder: 'Description',
-                    keyboardType: TextInputType.multiline,
-                    minLines: 1,
-                    maxLines: 8,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CupertinoTextField(
-                    controller: locationController,
-                    placeholder: 'Location',
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CupertinoTextField(
-                    controller: priceController,
-                    placeholder: 'Price',
-                    keyboardType: TextInputType.numberWithOptions(
-                      decimal: false,
-                      signed: false,
+          child: LayoutBuilder(builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CupertinoTextField(
+                        controller: titleController,
+                        placeholder: 'Title',
+                      ),
                     ),
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CupertinoTextField(
+                        controller: descriptionController,
+                        placeholder: 'Description',
+                        keyboardType: TextInputType.multiline,
+                        minLines: 1,
+                        maxLines: 8,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CupertinoTextField(
+                        controller: locationController,
+                        placeholder: 'Location',
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CupertinoTextField(
+                        controller: priceController,
+                        placeholder: 'Price',
+                        keyboardType: TextInputType.numberWithOptions(
+                          decimal: false,
+                          signed: false,
+                        ),
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: buildGridView(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CupertinoButton.filled(
+                        child: Text('Add auction'),
+                        onPressed: () async {
+                          await this.performFuture(() => addAuction(context));
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: buildGridView(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CupertinoButton.filled(
-                    child: Text('Add auction'),
-                    onPressed: () async {
-                      await this.performFuture(() => addAuction(context));
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          }),
         ),
       ),
       onWillPop: () async {

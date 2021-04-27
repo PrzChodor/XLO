@@ -46,9 +46,11 @@ class AuthenticationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: CupertinoTheme.of(context).barBackgroundColor,
-        statusBarIconBrightness: CupertinoTheme.of(context).brightness));
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+          statusBarColor: CupertinoTheme.of(context).barBackgroundColor,
+          statusBarIconBrightness: CupertinoTheme.of(context).brightness),
+    );
     if (firebaseUser != null) {
       return HomePage();
     }
