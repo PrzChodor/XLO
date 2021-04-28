@@ -1,13 +1,12 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:xlo_auction_app/model/auction.dart';
 import 'package:xlo_auction_app/routes/add_auction.dart';
+import 'package:xlo_auction_app/routes/auction_details.dart';
 import 'package:xlo_auction_app/widgets/auction_item.dart';
-import 'package:xlo_auction_app/widgets/notification.dart';
 
 class AuctionList extends StatefulWidget {
   @override
@@ -54,6 +53,7 @@ class _AuctionListState extends State<AuctionList> {
 
                       List<Auction> auctions = snapshot.data.docs
                           .map<Auction>((a) => Auction(
+                              a.id,
                               a['ownerID'],
                               a['title'],
                               a['description'],
@@ -65,32 +65,38 @@ class _AuctionListState extends State<AuctionList> {
                               a['place']))
                           .toList();
 
-                      return SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) => Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Card(
-                            color:
-                                CupertinoTheme.of(context).barBackgroundColor,
-                            clipBehavior: Clip.antiAlias,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            elevation: 0.0,
-                            child: InkWell(
-                              child: AuctionItem(
-                                  auctions[index].images[0],
-                                  auctions[index].title,
-                                  auctions[index].dateTime.toDate(),
-                                  auctions[index].price,
-                                  auctions[index].place),
-                              onTap: () =>
-                                  showNotification(context, "s", "message"),
+                      return SliverPadding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        sliver: SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) => Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Card(
+                              color:
+                                  CupertinoTheme.of(context).barBackgroundColor,
+                              clipBehavior: Clip.antiAlias,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              elevation: 0.0,
+                              child: InkWell(
+                                child: AuctionItem(
+                                    auctions[index].images[0],
+                                    auctions[index].title,
+                                    auctions[index].dateTime.toDate(),
+                                    auctions[index].price,
+                                    auctions[index].place),
+                                onTap: () => Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) =>
+                                            AuctionDetails(auctions[index]))),
+                              ),
                             ),
                           ),
-                        ),
-                        childCount: auctions.length,
-                      ));
+                          childCount: auctions.length,
+                        )),
+                      );
                     })
               ],
             ),

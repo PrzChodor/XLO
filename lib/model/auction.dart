@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Auction {
+  final String auctionID;
   final String ownerID;
   final String title;
   final String description;
@@ -11,6 +12,15 @@ class Auction {
   final String price;
   final String place;
 
-  Auction(this.ownerID, this.title, this.description, this.images,
-      this.dateTime, this.email, this.archived, this.price, this.place);
+  Auction(
+      this.auctionID,
+      this.ownerID,
+      this.title,
+      this.description,
+      this.images,
+      this.dateTime,
+      this.email,
+      this.archived,
+      this.price,
+      this.place);
 }
