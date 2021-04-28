@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/model/chatMessage.dart';
@@ -12,7 +13,7 @@ class Chat extends StatefulWidget {
   _ChatState createState() => _ChatState();
 }
 
-class _ChatState extends State<Chat> {
+class _ChatState extends State<Chat> with TickerProviderStateMixin {
   final _inputTextController = TextEditingController();
   // final messages = [];
   // lappop
@@ -111,14 +112,21 @@ class _ChatState extends State<Chat> {
                             ),
                             Padding(
                               padding: EdgeInsets.only(
-                                  left: 8.0, right: 8.0, bottom: 8.0),
-                              child: Visibility(
-                                visible: isMessageDateShownIndex == index,
-                                child: Text(
-                                  convertTimestampToDate(messages[index].date),
-                                  style: TextStyle(
-                                      color: CupertinoColors.inactiveGray,
-                                      fontSize: 14),
+                                  top: 2.0, left: 8.0, right: 8.0, bottom: 6.0),
+                              child: AnimatedSize(
+                                duration: Duration(milliseconds: 300),
+                                vsync: this,
+                                child: Container(
+                                  height: isMessageDateShownIndex == index
+                                      ? null
+                                      : 0.0,
+                                  child: Text(
+                                    convertTimestampToDate(
+                                        messages[index].date),
+                                    style: TextStyle(
+                                        color: CupertinoColors.inactiveGray,
+                                        fontSize: 14),
+                                  ),
                                 ),
                               ),
                             ),
@@ -145,6 +153,10 @@ class _ChatState extends State<Chat> {
                       keyboardType: TextInputType.multiline,
                       minLines: 1,
                       maxLines: 6,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          border: Border.all(
+                              color: CupertinoTheme.of(context).primaryColor)),
                     ),
                   ),
                 ),
@@ -156,7 +168,7 @@ class _ChatState extends State<Chat> {
                       _inputTextController.clear();
                     },
                     child: Icon(
-                      CupertinoIcons.arrow_right,
+                      Icons.send,
                       size: 26,
                     ),
                   ),
