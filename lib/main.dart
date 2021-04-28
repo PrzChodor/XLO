@@ -45,12 +45,16 @@ class MyApp extends StatelessWidget {
 class AuthenticationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: CupertinoTheme.of(context).barBackgroundColor,
+      statusBarIconBrightness:
+          MediaQuery.of(context).platformBrightness == Brightness.light
+              ? Brightness.dark
+              : Brightness.light,
+    ));
+
     final firebaseUser = context.watch<User>();
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-          statusBarColor: CupertinoTheme.of(context).barBackgroundColor,
-          statusBarIconBrightness: CupertinoTheme.of(context).brightness),
-    );
+
     if (firebaseUser != null) {
       return HomePage();
     }
