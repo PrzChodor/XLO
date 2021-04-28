@@ -7,9 +7,11 @@ import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:xlo_auction_app/routes/archive_auction.dart';
 import 'package:xlo_auction_app/routes/auction_list.dart';
 import 'package:xlo_auction_app/routes/chat.dart';
+import 'package:xlo_auction_app/routes/new_auction.dart';
+import 'package:xlo_auction_app/routes/user_profile.dart';
 
 class HomePage extends StatelessWidget {
-  final List<Widget> _pages = [AuctionList(), ArchiveAuction(), Chat()];
+  final List<Widget> _pages = [AuctionList(), ArchiveAuction(), NewAuction(), Chat(), UserProfile()];
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +34,24 @@ class HomePage extends StatelessWidget {
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.list_bullet),
-                label: 'Auctions',
+                label: 'Search',
               ),
               BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.archivebox),
                 label: 'Archived',
               ),
               BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.plus_circle),
+                label: 'Add',
+              ),
+              BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.chat_bubble),
                 label: 'Chat',
               ),
+              BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.profile_circled),
+                  label: 'User',
+              )
             ],
           ),
           tabBuilder: (context, index) {
