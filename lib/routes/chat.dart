@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
@@ -86,8 +85,9 @@ class _ChatState extends State<Chat> {
                             Container(
                               decoration: BoxDecoration(
                                 color: messages[index].isSender
-                                    ? CupertinoColors.systemTeal
-                                    : CupertinoColors.white,
+                                    ? CupertinoTheme.of(context).primaryColor
+                                    : CupertinoTheme.of(context)
+                                        .barBackgroundColor,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               constraints: BoxConstraints(
@@ -97,8 +97,16 @@ class _ChatState extends State<Chat> {
                               child: Text(
                                 messages[index].message,
                                 textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    fontSize: 15, color: CupertinoColors.black),
+                                style: messages[index].isSender
+                                    ? CupertinoTheme.of(context)
+                                        .textTheme
+                                        .textStyle
+                                        .merge(TextStyle(
+                                            color: CupertinoTheme.of(context)
+                                                .barBackgroundColor))
+                                    : CupertinoTheme.of(context)
+                                        .textTheme
+                                        .textStyle,
                               ),
                             ),
                             Padding(
@@ -126,7 +134,7 @@ class _ChatState extends State<Chat> {
           Container(
             padding: EdgeInsets.only(left: 10),
             width: double.infinity,
-            color: CupertinoColors.white,
+            color: CupertinoTheme.of(context).barBackgroundColor,
             child: Row(
               children: <Widget>[
                 Expanded(
