@@ -1,92 +1,3 @@
-// import 'package:flutter/cupertino.dart';
-// import 'package:provider/provider.dart';
-// import 'package:xlo_auction_app/authentication/authentication.dart';
-//
-// class NewAuction extends StatefulWidget{
-//   @override
-//   State<StatefulWidget> createState() => _NewAuction();
-// }
-//
-// class _NewAuction extends State<NewAuction> {
-//   @override
-//   Widget build(BuildContext context) {
-//     final auth = Provider.of<AuthenticationService>(context);
-//
-//     return Container(
-//       child: CupertinoPageScaffold(
-//         navigationBar: CupertinoNavigationBar(
-//           middle: Text('Add auction'),
-//         ),
-//         child: SafeArea(
-//           child: LayoutBuilder(builder: (context, constraints) {
-//             return SingleChildScrollView(
-//               child: ConstrainedBox(
-//                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
-//                 child: Column(
-//                   mainAxisSize: MainAxisSize.min,
-//                   children: [
-//                     Padding(
-//                       padding: const EdgeInsets.all(8.0),
-//                       child: CupertinoTextField(
-//                         controller: titleController,
-//                         placeholder: 'Title',
-//                       ),
-//                     ),
-//                     Padding(
-//                       padding: const EdgeInsets.all(8.0),
-//                       child: CupertinoTextField(
-//                         controller: descriptionController,
-//                         placeholder: 'Description',
-//                         keyboardType: TextInputType.multiline,
-//                         minLines: 1,
-//                         maxLines: 8,
-//                       ),
-//                     ),
-//                     Padding(
-//                       padding: const EdgeInsets.all(8.0),
-//                       child: CupertinoTextField(
-//                         controller: locationController,
-//                         placeholder: 'Location',
-//                       ),
-//                     ),
-//                     Padding(
-//                       padding: const EdgeInsets.all(8.0),
-//                       child: CupertinoTextField(
-//                         controller: priceController,
-//                         placeholder: 'Price',
-//                         keyboardType: TextInputType.numberWithOptions(
-//                           decimal: false,
-//                           signed: false,
-//                         ),
-//                         inputFormatters: <TextInputFormatter>[
-//                           FilteringTextInputFormatter.digitsOnly
-//                         ],
-//                       ),
-//                     ),
-//                     Padding(
-//                       padding: const EdgeInsets.all(8.0),
-//                       child: buildGridView(),
-//                     ),
-//                     Padding(
-//                       padding: const EdgeInsets.all(8.0),
-//                       child: CupertinoButton.filled(
-//                         child: Text('Add auction'),
-//                         onPressed: () async {
-//                           await this.performFuture(() => addAuction(context));
-//                         },
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             );
-//           }),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'dart:developer' as dev;
 import 'dart:io';
 import 'dart:math';
@@ -308,23 +219,24 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
 
     await _auctions
         .add({
-      'title': titleController.text.trim(),
-      'description': descriptionController.text.trim(),
-      'ownerID': _auth.getCurrentUserId(),
-      'email': _auth.getCurrentUserEmail(),
-      'date': DateTime.now(),
-      'archived': false,
-      'images': FieldValue.arrayUnion(imageUrls),
-      'price': priceController.text,
-      'place': locationController.text.trim()
-    })
+          'title': titleController.text.trim(),
+          'description': descriptionController.text.trim(),
+          'ownerID': _auth.getCurrentUserId(),
+          'email': _auth.getCurrentUserEmail(),
+          'date': DateTime.now(),
+          'archived': false,
+          'images': FieldValue.arrayUnion(imageUrls),
+          'price': priceController.text,
+          'place': locationController.text.trim()
+        })
         .then((value) => {
-      showNotification(
-          context, 'Success', 'Auction added successfully'),
-      Navigator.pop(context)
-    })
-        // ignore: return_of_invalid_type_from_catch_error
-        .catchError((error) => showNotification(context, 'Error', "Failed to add auction!\n$error"));
+              showNotification(
+                  context, 'Success', 'Auction added successfully'),
+              Navigator.pop(context)
+            })
+        .catchError((error, stackTrace) {
+          showNotification(context, 'Error', "Failed to add auction!\n$error");
+        });
   }
 
   Future<void> uploadImages(BuildContext context) async {
@@ -336,8 +248,12 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
       final imageName = uuid.v4();
       File imageFile = await getImageFileFromAssets(imageAsset);
 
-      final taskSnapshot =
-      await _storage.ref('$loggedUser/$imageName').putFile(imageFile);
+      final taskSnapshot = await _storage
+          .ref('$loggedUser/$imageName')
+          .putFile(imageFile)
+          .catchError((error, stackTrace) {
+        showNotification(context, 'Error', "Failed to upload images!\n$error");
+      });
 
       final imageUrl = await taskSnapshot.ref.getDownloadURL();
 
@@ -351,7 +267,7 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
     final byteData = await asset.getByteData();
 
     final tempFile =
-    File("${(await getTemporaryDirectory()).path}/${asset.name}");
+        File("${(await getTemporaryDirectory()).path}/${asset.name}");
     final file = await tempFile.writeAsBytes(
       byteData.buffer
           .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes),

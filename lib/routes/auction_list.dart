@@ -19,16 +19,16 @@ class _AuctionListState extends State<AuctionList> {
       builder: (context) {
         return CupertinoPageScaffold(
             child: SafeArea(
-              child: CupertinoScrollbar(
-              child: CustomScrollView(
-                slivers: [
-                  CupertinoSliverNavigationBar(
-                    largeTitle: Text("Auctions"),
-                  ),
-                  SliverPersistentHeader(
-                    delegate: SilverSearchBarDelegate(child: SearchBar()),
-                    pinned: true,
-                    floating: false,
+          child: CupertinoScrollbar(
+            child: CustomScrollView(
+              slivers: [
+                CupertinoSliverNavigationBar(
+                  largeTitle: Text("Auctions"),
+                ),
+                SliverPersistentHeader(
+                  delegate: SilverSearchBarDelegate(child: SearchBar()),
+                  pinned: true,
+                  floating: false,
                 ),
                 StreamBuilder(
                     stream: FirebaseFirestore.instance
@@ -112,7 +112,7 @@ class SilverSearchBarDelegate extends SliverPersistentHeaderDelegate {
 
   const SilverSearchBarDelegate({
     @required this.child,
-    this.height = 36,
+    this.height = 52,
   });
 
   @override
@@ -143,18 +143,10 @@ class _SearchBar extends State<SearchBar> {
   Widget build(BuildContext context) {
     return Container(
       color: CupertinoTheme.of(context).scaffoldBackgroundColor,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          //CupertinoSearchTextField(),
-          Expanded(
-              child: CupertinoSearchTextField(
-            prefixInsets: EdgeInsetsDirectional.fromSTEB(6, 0, 0, 0),
-            suffixInsets: EdgeInsetsDirectional.fromSTEB(0, 0, 6, 0),
-            ),
-          ),
-        ],
+      padding: const EdgeInsets.all(8),
+      child: CupertinoSearchTextField(
+        prefixInsets: EdgeInsetsDirectional.fromSTEB(6, 0, 0, 0),
+        suffixInsets: EdgeInsetsDirectional.fromSTEB(0, 0, 6, 0),
       ),
     );
   }
