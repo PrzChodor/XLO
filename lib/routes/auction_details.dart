@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:xlo_auction_app/model/auction.dart';
 import 'package:intl/intl.dart';
+import 'package:xlo_auction_app/routes/fullscreen_gallery.dart';
 import 'package:xlo_auction_app/widgets/notification.dart';
 
 class AuctionDetails extends StatefulWidget {
   final Auction auction;
 
-  AuctionDetails(this.auction, {Key key}) : super(key: key);
+  AuctionDetails(this.auction);
 
   @override
   State<StatefulWidget> createState() => _AuctionDetailsState();
@@ -15,6 +16,7 @@ class AuctionDetails extends StatefulWidget {
 class _AuctionDetailsState extends State<AuctionDetails> {
   final PageController galleryController = PageController();
   double currentPage = 0;
+  List<String> images;
 
   @override
   void dispose() {
@@ -24,6 +26,7 @@ class _AuctionDetailsState extends State<AuctionDetails> {
 
   @override
   void initState() {
+    images = List<String>.from(widget.auction.images);
     galleryController.addListener(() {
       setState(() {
         currentPage = galleryController.page;
@@ -58,9 +61,10 @@ class _AuctionDetailsState extends State<AuctionDetails> {
                           controller: galleryController,
                           physics: ClampingScrollPhysics(),
                           children: [
-                            for (var image in widget.auction.images)
+                            for (var i = 0; i < images.length; i++)
                               GalleryPage(
-                                image: image,
+                                images: images,
+                                index: i,
                               )
                           ],
                         ),
@@ -68,7 +72,7 @@ class _AuctionDetailsState extends State<AuctionDetails> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          for (var i = 0; i < widget.auction.images.length; i++)
+                          for (var i = 0; i < images.length; i++)
                             Padding(
                               padding: const EdgeInsets.all(4.0),
                               child: Container(
@@ -285,36 +289,43 @@ class _AuctionDetailsState extends State<AuctionDetails> {
 
   double getIndicatorPosition() {
     var center = MediaQuery.of(context).size.width / 2 - 10;
-    var startingOffset = (widget.auction.images.length - 1) * 10;
+    var startingOffset = (images.length - 1) * 10;
     return center - startingOffset + 20 * currentPage;
   }
 }
 
 class GalleryPage extends StatelessWidget {
-  final String image;
+  final List<String> images;
+  final int index;
 
-  GalleryPage({this.image});
+  GalleryPage({this.images, this.index});
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(
-      image,
-      width: MediaQuery.of(context).size.width,
-      height: 256,
-      fit: BoxFit.cover,
-      loadingBuilder: (BuildContext context, Widget child,
-          ImageChunkEvent loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Center(
-          child: SizedBox(
-            child: CupertinoActivityIndicator(
-              radius: 64,
+    return GestureDetector(
+      onTap: () => Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => FullscreenGallery(images, index))),
+      child: Image.network(
+        images[index],
+        width: MediaQuery.of(context).size.width,
+        height: 256,
+        fit: BoxFit.cover,
+        loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: SizedBox(
+              child: CupertinoActivityIndicator(
+                radius: 64,
+              ),
+              width: 256,
+              height: 256,
             ),
-            width: 256,
-            height: 256,
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
