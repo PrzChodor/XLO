@@ -11,7 +11,13 @@ import 'package:xlo_auction_app/routes/new_auction.dart';
 import 'package:xlo_auction_app/routes/user_profile.dart';
 
 class HomePage extends StatelessWidget {
-  final List<Widget> _pages = [AuctionList(), ArchiveAuction(), NewAuction(), Chat(), UserProfile()];
+  final List<Widget> _pages = [
+    AuctionList(),
+    ArchiveAuction(),
+    NewAuction(),
+    Chat(),
+    UserProfile()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +39,12 @@ class HomePage extends StatelessWidget {
                 CupertinoTheme.of(context).barBackgroundColor.withOpacity(1.0),
             items: const [
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.list_bullet),
+                icon: Icon(CupertinoIcons.search),
                 label: 'Search',
               ),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.archivebox),
-                label: 'Archived',
+                icon: Icon(CupertinoIcons.heart),
+                label: 'Favorites',
               ),
               BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.plus_circle),
@@ -49,8 +55,8 @@ class HomePage extends StatelessWidget {
                 label: 'Chat',
               ),
               BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.profile_circled),
-                  label: 'User',
+                icon: Icon(CupertinoIcons.profile_circled),
+                label: 'User',
               )
             ],
           ),

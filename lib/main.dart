@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         theme: CustomTheme.customTheme,
         routes: {
           '/': (context) => AuthenticationWrapper(),
-          '/signIn': (context) => SignIn(),
+          '/register': (context) => Register(),
         },
       ),
     );
@@ -58,6 +58,6 @@ class AuthenticationWrapper extends StatelessWidget {
     if (firebaseUser != null) {
       return HomePage();
     }
-    return Register();
+    return SignIn();
   }
 }

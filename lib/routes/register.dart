@@ -26,62 +26,71 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text('Register',
-                  style: CupertinoTheme.of(context)
-                      .textTheme
-                      .navLargeTitleTextStyle),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              child: CupertinoTextField(
-                controller: emailController,
-                placeholder: 'E-Mail',
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text('Register',
+                    style: CupertinoTheme.of(context)
+                        .textTheme
+                        .navLargeTitleTextStyle),
               ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              child: CupertinoTextField(
-                controller: passwordController,
-                placeholder: 'Password',
-                obscureText: true,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CupertinoButton.filled(
-                onPressed: () => _createUserWithEmail(context),
-                child: const Text('Register'),
-              ),
-            ),
-            RichText(
-              text: TextSpan(
-                text: 'Already have an account? ',
-                style: TextStyle(
-                  color: CupertinoTheme.of(context).textTheme.textStyle.color,
-                ),
-                children: [
-                  TextSpan(
-                    text: 'Sign in',
-                    style: TextStyle(
-                      color: CupertinoTheme.of(context).primaryColor,
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () => Navigator.pushNamed(
-                            context,
-                            '/signIn',
-                          ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 300),
+                  child: CupertinoTextField(
+                    controller: emailController,
+                    placeholder: 'E-Mail',
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 300),
+                  child: CupertinoTextField(
+                    controller: passwordController,
+                    placeholder: 'Password',
+                    obscureText: true,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CupertinoButton.filled(
+                  onPressed: () => _createUserWithEmail(context),
+                  child: const Text('Register'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16, bottom: 8),
+                child: RichText(
+                  text: TextSpan(
+                    text: 'Already have an account? ',
+                    style: TextStyle(
+                      color:
+                          CupertinoTheme.of(context).textTheme.textStyle.color,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: 'Sign in',
+                        style: TextStyle(
+                          color: CupertinoTheme.of(context).primaryColor,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

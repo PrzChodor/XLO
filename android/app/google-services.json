@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "547672813506",
+    "firebase_url": "https://xlo-auction-app-default-rtdb.firebaseio.com",
     "project_id": "xlo-auction-app",
     "storage_bucket": "xlo-auction-app.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "547672813506-5rma9p3hmcs7tiulejem36vrg5mt24k9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "xlo.xlo_auction_app",
+            "certificate_hash": "3c5cf168ad68f9e2a40f1fca85dc1fc4c2af9ee2"
+          }
+        },
         {
           "client_id": "547672813506-luh0c4ut8thtksg5gpttn1tfq5cf2q01.apps.googleusercontent.com",
           "client_type": 3
@@ -29,6 +38,13 @@
             {
               "client_id": "547672813506-luh0c4ut8thtksg5gpttn1tfq5cf2q01.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "547672813506-g99nm60sp6mi3ruantqki8qhkgf1icnq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "xlo.xloAuctionApp"
+              }
             }
           ]
         }
