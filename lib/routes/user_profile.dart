@@ -19,7 +19,7 @@ class _UserProfile extends State<UserProfile>{
             auth.signOut();
           },
           child: const Text(
-            'Tutaj jest user profile',
+            'Tutaj bedzie user profile',
             style: TextStyle(color: CupertinoColors.white),
           ),
           color: CupertinoColors.activeBlue,

@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:xlo_auction_app/model/auction.dart';
-import 'package:xlo_auction_app/routes/add_auction.dart';
 import 'package:xlo_auction_app/routes/auction_details.dart';
 import 'package:xlo_auction_app/widgets/auction_item.dart';
 
@@ -20,16 +19,16 @@ class _AuctionListState extends State<AuctionList> {
       builder: (context) {
         return CupertinoPageScaffold(
             child: SafeArea(
-          child: CupertinoScrollbar(
-            child: CustomScrollView(
-              slivers: [
-                CupertinoSliverNavigationBar(
-                  largeTitle: Text("Auctions"),
-                ),
-                SliverPersistentHeader(
-                  delegate: SilverSearchBarDelegate(child: SearchBarAndAdd()),
-                  pinned: true,
-                  floating: false,
+              child: CupertinoScrollbar(
+              child: CustomScrollView(
+                slivers: [
+                  CupertinoSliverNavigationBar(
+                    largeTitle: Text("Auctions"),
+                  ),
+                  SliverPersistentHeader(
+                    delegate: SilverSearchBarDelegate(child: SearchBar()),
+                    pinned: true,
+                    floating: false,
                 ),
                 StreamBuilder(
                     stream: FirebaseFirestore.instance
@@ -113,7 +112,7 @@ class SilverSearchBarDelegate extends SliverPersistentHeaderDelegate {
 
   const SilverSearchBarDelegate({
     @required this.child,
-    this.height = 56,
+    this.height = 36,
   });
 
   @override
@@ -134,12 +133,12 @@ class SilverSearchBarDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => height;
 }
 
-class SearchBarAndAdd extends StatefulWidget {
+class SearchBar extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _SearchBarAndAddState();
+  State<StatefulWidget> createState() => _SearchBar();
 }
 
-class _SearchBarAndAddState extends State<SearchBarAndAdd> {
+class _SearchBar extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -148,16 +147,13 @@ class _SearchBarAndAddState extends State<SearchBarAndAdd> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
+          //CupertinoSearchTextField(),
           Expanded(
               child: CupertinoSearchTextField(
             prefixInsets: EdgeInsetsDirectional.fromSTEB(6, 0, 0, 0),
             suffixInsets: EdgeInsetsDirectional.fromSTEB(0, 0, 6, 0),
-          )),
-          CupertinoButton(
-            onPressed: () => Navigator.push(context,
-                CupertinoPageRoute(builder: (context) => AddAuction())),
-            child: Icon(CupertinoIcons.add),
-          )
+            ),
+          ),
         ],
       ),
     );

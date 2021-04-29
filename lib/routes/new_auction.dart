@@ -323,8 +323,8 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
           context, 'Success', 'Auction added successfully'),
       Navigator.pop(context)
     })
-        .catchError((error) => showNotification(
-        context, 'Error', "Failed to add auction!\n$error"));
+        // ignore: return_of_invalid_type_from_catch_error
+        .catchError((error) => showNotification(context, 'Error', "Failed to add auction!\n$error"));
   }
 
   Future<void> uploadImages(BuildContext context) async {
