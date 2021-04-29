@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,7 +16,7 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> with TickerProviderStateMixin {
   final _inputTextController = TextEditingController();
-  // final messages = [];
+  List<ChatMessage> messages = [];
   // lappop
   static const String sender = 'sQqGbK2fJsMdJp2wW5gU6pOguQs2';
   // bartosz
@@ -47,10 +48,17 @@ class _ChatState extends State<Chat> with TickerProviderStateMixin {
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
-                return Spacer();
+                return Expanded(
+                  child: Center(
+                    child: CupertinoActivityIndicator(
+                      radius: min(MediaQuery.of(context).size.width * 0.1,
+                          MediaQuery.of(context).size.height * 0.1),
+                    ),
+                  ),
+                );
               }
 
-              List<ChatMessage> messages = snapshot.data.docs
+              messages = snapshot.data.docs
                   .map<ChatMessage>((e) =>
                       ChatMessage(e['isSender'], e['message'], e['date']))
                   .toList();
@@ -89,15 +97,14 @@ class _ChatState extends State<Chat> with TickerProviderStateMixin {
                                     ? CupertinoTheme.of(context).primaryColor
                                     : CupertinoTheme.of(context)
                                         .barBackgroundColor,
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: getBorderRadius(index),
                               ),
                               constraints: BoxConstraints(
                                   maxWidth:
                                       MediaQuery.of(context).size.width * 0.7),
-                              padding: EdgeInsets.all(16),
+                              padding: EdgeInsets.all(10),
                               child: Text(
                                 messages[index].message,
-                                textAlign: TextAlign.start,
                                 style: messages[index].isSender
                                     ? CupertinoTheme.of(context)
                                         .textTheme
@@ -111,8 +118,11 @@ class _ChatState extends State<Chat> with TickerProviderStateMixin {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(
-                                  top: 2.0, left: 8.0, right: 8.0, bottom: 6.0),
+                              padding: isMessageDateShownIndex == index
+                                  ? EdgeInsets.symmetric(
+                                      vertical: 3.0, horizontal: 8.0)
+                                  : EdgeInsets.symmetric(
+                                      vertical: 1.0, horizontal: 8.0),
                               child: AnimatedSize(
                                 duration: Duration(milliseconds: 300),
                                 vsync: this,
@@ -220,5 +230,24 @@ class _ChatState extends State<Chat> with TickerProviderStateMixin {
     return DateTime(date.year, date.month, date.day)
         .difference(DateTime(now.year, now.month, now.day))
         .inDays;
+  }
+
+  BorderRadius getBorderRadius(int index) {
+    Radius tl = Radius.circular(20);
+    Radius tr = Radius.circular(20);
+    Radius bl = Radius.circular(20);
+    Radius br = Radius.circular(20);
+
+    if (messages[index].isSender) {
+      if (index > 0 && messages[index - 1].isSender) tr = Radius.circular(5);
+      if (index < messages.length - 1 && messages[index + 1].isSender)
+        br = Radius.circular(5);
+    } else {
+      if (index > 0 && !messages[index - 1].isSender) tl = Radius.circular(5);
+      if (index < messages.length - 1 && !messages[index + 1].isSender)
+        bl = Radius.circular(5);
+    }
+    return BorderRadius.only(
+        topLeft: tl, topRight: tr, bottomLeft: bl, bottomRight: br);
   }
 }
