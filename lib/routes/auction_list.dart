@@ -85,9 +85,9 @@ class _AuctionListState extends State<AuctionList> {
                                     auctions[index].dateTime.toDate(),
                                     auctions[index].price,
                                     auctions[index].place),
-                                onTap: () => Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
+                                onTap: () => Navigator.of(context,
+                                        rootNavigator: true)
+                                    .push(CupertinoPageRoute(
                                         builder: (context) =>
                                             AuctionDetails(auctions[index]))),
                               ),
