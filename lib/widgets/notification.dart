@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-void showNotification(
-    BuildContext context, String title, String message) {
+void showNotification(BuildContext context, String title, String message) {
   showCupertinoDialog(
       context: context,
       builder: (context) {
@@ -10,15 +9,15 @@ void showNotification(
 }
 
 class NotificationDialog extends StatelessWidget {
-  final errorTitle;
-  final errorMessage;
-  NotificationDialog(this.errorTitle, this.errorMessage);
+  final _errorTitle;
+  final _errorMessage;
+  NotificationDialog(this._errorTitle, this._errorMessage);
 
   @override
   Widget build(BuildContext context) {
     return CupertinoAlertDialog(
-      title: Text(errorTitle),
-      content: Text(errorMessage),
+      title: Text(_errorTitle),
+      content: Text(_errorMessage),
       actions: [
         CupertinoButton(
           child: const Text('Ok'),

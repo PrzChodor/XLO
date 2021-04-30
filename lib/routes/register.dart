@@ -12,13 +12,13 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -43,7 +43,7 @@ class _RegisterState extends State<Register> {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 300),
                   child: CupertinoTextField(
-                    controller: emailController,
+                    controller: _emailController,
                     placeholder: 'E-Mail',
                   ),
                 ),
@@ -54,7 +54,7 @@ class _RegisterState extends State<Register> {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 300),
                   child: CupertinoTextField(
-                    controller: passwordController,
+                    controller: _passwordController,
                     placeholder: 'Password',
                     obscureText: true,
                   ),
@@ -100,8 +100,8 @@ class _RegisterState extends State<Register> {
     try {
       await context.read<AuthenticationService>().createUserWithEmail(
             context,
-            emailController.text,
-            passwordController.text,
+            _emailController.text,
+            _passwordController.text,
           );
     } on FirebaseAuthException catch (e) {
       showNotification(

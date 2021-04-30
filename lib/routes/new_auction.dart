@@ -22,19 +22,19 @@ class NewAuction extends StatefulWidget {
 }
 
 class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController locationController = TextEditingController();
-  List<Asset> images = <Asset>[];
-  List<String> imageUrls = <String>[];
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  List<Asset> _images = <Asset>[];
+  List<String> _imageUrls = <String>[];
 
   @override
   void dispose() {
-    titleController.dispose();
-    descriptionController.dispose();
-    priceController.dispose();
-    locationController.dispose();
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _priceController.dispose();
+    _locationController.dispose();
     super.dispose();
   }
 
@@ -56,14 +56,14 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: CupertinoTextField(
-                        controller: titleController,
+                        controller: _titleController,
                         placeholder: 'Title',
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: CupertinoTextField(
-                        controller: descriptionController,
+                        controller: _descriptionController,
                         placeholder: 'Description',
                         keyboardType: TextInputType.multiline,
                         minLines: 1,
@@ -73,14 +73,14 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: CupertinoTextField(
-                        controller: locationController,
+                        controller: _locationController,
                         placeholder: 'Location',
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: CupertinoTextField(
-                        controller: priceController,
+                        controller: _priceController,
                         placeholder: 'Price',
                         keyboardType: TextInputType.numberWithOptions(
                           decimal: false,
@@ -129,7 +129,7 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 10,
         enableCamera: true,
-        selectedAssets: images,
+        selectedAssets: _images,
         cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
         materialOptions: MaterialOptions(
           actionBarColor: "#007bff",
@@ -144,7 +144,7 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
     }
 
     setState(() {
-      images = resultList;
+      _images = resultList;
     });
   }
 
@@ -154,9 +154,9 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
         shrinkWrap: true,
         crossAxisCount: 3,
         crossAxisSpacing: 8.0,
-        children: List.generate(images.length + 1, (index) {
-          if (index < images.length) {
-            Asset asset = images[index];
+        children: List.generate(_images.length + 1, (index) {
+          if (index < _images.length) {
+            Asset asset = _images[index];
             return ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(8)),
               child: AssetThumb(
@@ -193,19 +193,19 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
   }
 
   Future<void> addAuction(BuildContext context) async {
-    if (titleController.text.trim().isEmpty) {
+    if (_titleController.text.trim().isEmpty) {
       showNotification(context, "Error", "Enter title!");
       return;
-    } else if (descriptionController.text.trim().isEmpty) {
+    } else if (_descriptionController.text.trim().isEmpty) {
       showNotification(context, "Error", "Enter description!");
       return;
-    } else if (locationController.text.trim().isEmpty) {
+    } else if (_locationController.text.trim().isEmpty) {
       showNotification(context, "Error", "Enter location!");
       return;
-    } else if (priceController.text.trim().isEmpty) {
+    } else if (_priceController.text.trim().isEmpty) {
       showNotification(context, "Error", "Enter price!");
       return;
-    } else if (images.isEmpty) {
+    } else if (_images.isEmpty) {
       showNotification(context, "Error", "Select atleast one image!");
       return;
     }
@@ -219,15 +219,15 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
 
     await _auctions
         .add({
-          'title': titleController.text.trim(),
-          'description': descriptionController.text.trim(),
+          'title': _titleController.text.trim(),
+          'description': _descriptionController.text.trim(),
           'ownerID': _auth.getCurrentUserId(),
           'email': _auth.getCurrentUserEmail(),
           'date': DateTime.now(),
           'archived': false,
-          'images': FieldValue.arrayUnion(imageUrls),
-          'price': priceController.text,
-          'place': locationController.text.trim()
+          'images': FieldValue.arrayUnion(_imageUrls),
+          'price': _priceController.text,
+          'place': _locationController.text.trim()
         })
         .then((value) => {
               showNotification(
@@ -244,7 +244,7 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
     final _storage = Provider.of<FirebaseStorage>(context, listen: false);
     final loggedUser = _auth.getCurrentUserId();
 
-    for (var imageAsset in images) {
+    for (var imageAsset in _images) {
       final imageName = uuid.v4();
       File imageFile = await getImageFileFromAssets(imageAsset);
 
@@ -258,7 +258,7 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
       final imageUrl = await taskSnapshot.ref.getDownloadURL();
 
       setState(() {
-        imageUrls.add(imageUrl);
+        _imageUrls.add(imageUrl);
       });
     }
   }
