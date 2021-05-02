@@ -61,7 +61,8 @@ class _AuctionListState extends State<AuctionList> {
                               a['email'],
                               a['archived'],
                               a['price'],
-                              a['place']))
+                              a['place'],
+                              false))
                           .toList();
 
                       return SliverPadding(
@@ -85,9 +86,9 @@ class _AuctionListState extends State<AuctionList> {
                                     auctions[index].dateTime.toDate(),
                                     auctions[index].price,
                                     auctions[index].place),
-                                onTap: () => Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
+                                onTap: () => Navigator.of(context,
+                                        rootNavigator: true)
+                                    .push(CupertinoPageRoute(
                                         builder: (context) =>
                                             AuctionDetails(auctions[index]))),
                               ),

@@ -12,13 +12,13 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -44,7 +44,7 @@ class _SignInState extends State<SignIn> {
                   child: ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: 300),
                     child: CupertinoTextField(
-                      controller: emailController,
+                      controller: _emailController,
                       placeholder: 'E-mail',
                     ),
                   ),
@@ -55,7 +55,7 @@ class _SignInState extends State<SignIn> {
                   child: ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: 300),
                     child: CupertinoTextField(
-                      controller: passwordController,
+                      controller: _passwordController,
                       placeholder: 'Password',
                       obscureText: true,
                     ),
@@ -211,8 +211,8 @@ class _SignInState extends State<SignIn> {
     try {
       isSignedIn = await authentication.signInWithEmail(
         context,
-        emailController.text,
-        passwordController.text,
+        _emailController.text,
+        _passwordController.text,
       );
     } on FirebaseAuthException catch (e) {
       showNotification(

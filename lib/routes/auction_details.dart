@@ -1,18 +1,54 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:xlo_auction_app/model/auction.dart';
 import 'package:intl/intl.dart';
+import 'package:xlo_auction_app/routes/fullscreen_gallery.dart';
 import 'package:xlo_auction_app/widgets/notification.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 
 class AuctionDetails extends StatefulWidget {
   final Auction auction;
 
-  AuctionDetails(this.auction, {Key key}) : super(key: key);
+  AuctionDetails(this.auction);
 
   @override
   State<StatefulWidget> createState() => _AuctionDetailsState();
 }
 
 class _AuctionDetailsState extends State<AuctionDetails> {
+  final PageController galleryController = PageController();
+  double currentPage = 0;
+  List<String> images;
+
+  @override
+  void dispose() {
+    galleryController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    if (widget.auction.test) {
+      images = [];
+      for (Asset image in widget.auction.images) {
+        FlutterAbsolutePath.getAbsolutePath(image.identifier)
+            .then((value) => setState(() {
+                  images.add(value);
+                }));
+      }
+    } else {
+      images = List<String>.from(widget.auction.images);
+    }
+    galleryController.addListener(() {
+      setState(() {
+        currentPage = galleryController.page;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -22,30 +58,67 @@ class _AuctionDetailsState extends State<AuctionDetails> {
       child: SafeArea(
         child: LayoutBuilder(builder: (context, constraints) {
           return SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.network(
-                    widget.auction.images[0],
-                    width: MediaQuery.of(context).size.width,
-                    height: 256,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: SizedBox(
-                          child: CupertinoActivityIndicator(
-                            radius: 64,
-                          ),
-                          width: 256,
-                          height: 256,
+                  Stack(
+                    alignment: Alignment(0, 0.8),
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 256,
+                        child: PageView(
+                          controller: galleryController,
+                          physics: ClampingScrollPhysics(),
+                          children: [
+                            for (var i = 0; i < images.length; i++)
+                              GalleryPage(
+                                images: images,
+                                index: i,
+                                test: widget.auction.test,
+                              )
+                          ],
                         ),
-                      );
-                    },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (var i = 0; i < images.length; i++)
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Container(
+                                width: 12,
+                                height: 12,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        color: CupertinoColors.inactiveGray,
+                                        width: 3.0)),
+                              ),
+                            )
+                        ],
+                      ),
+                      Positioned(
+                        left: getIndicatorPosition(),
+                        child: Padding(
+                          padding: const EdgeInsets.all(3.0),
+                          child: Container(
+                            width: 14,
+                            height: 14,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    color: CupertinoTheme.of(context)
+                                        .scaffoldBackgroundColor,
+                                    width: 5.0)),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                   Container(
                     transform: Matrix4.translationValues(0, -16, 0),
@@ -75,7 +148,7 @@ class _AuctionDetailsState extends State<AuctionDetails> {
                               child: Row(
                                 children: [
                                   Text(
-                                    DateFormat('dd MMMM yyyy').format(
+                                    DateFormat('d MMMM yyyy').format(
                                         widget.auction.dateTime.toDate()),
                                     style: CupertinoTheme.of(context)
                                         .textTheme
@@ -226,6 +299,56 @@ class _AuctionDetailsState extends State<AuctionDetails> {
           );
         }),
       ),
+    );
+  }
+
+  double getIndicatorPosition() {
+    var center = MediaQuery.of(context).size.width / 2 - 10;
+    var startingOffset = (images.length - 1) * 10;
+    return center - startingOffset + 20 * currentPage;
+  }
+}
+
+class GalleryPage extends StatelessWidget {
+  final List<String> images;
+  final int index;
+  final bool test;
+
+  GalleryPage({this.images, this.index, this.test});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => FullscreenGallery(images, index, test))),
+      child: test
+          ? Image.file(
+              File(images[index]),
+              width: MediaQuery.of(context).size.width,
+              height: 256,
+              fit: BoxFit.cover,
+            )
+          : Image.network(
+              images[index],
+              width: MediaQuery.of(context).size.width,
+              height: 256,
+              fit: BoxFit.cover,
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: SizedBox(
+                    child: CupertinoActivityIndicator(
+                      radius: 64,
+                    ),
+                    width: 256,
+                    height: 256,
+                  ),
+                );
+              },
+            ),
     );
   }
 }
