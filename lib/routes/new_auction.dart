@@ -6,10 +6,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
+import 'package:xlo_auction_app/model/auction.dart';
+import 'package:xlo_auction_app/routes/auction_details.dart';
 import 'package:xlo_auction_app/widgets/notification.dart';
 import 'package:uuid/uuid.dart';
 import 'package:screen_loader/screen_loader.dart';
@@ -66,7 +68,7 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
                         controller: _descriptionController,
                         placeholder: 'Description',
                         keyboardType: TextInputType.multiline,
-                        minLines: 1,
+                        minLines: 4,
                         maxLines: 8,
                       ),
                     ),
@@ -96,12 +98,48 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
                       child: buildGridView(),
                     ),
                     Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Container(
+                        width: 250,
+                        child: CupertinoButton(
+                            child: Text('Preview auction'),
+                            onPressed: () {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              Navigator.of(context, rootNavigator: true).push(
+                                  CupertinoPageRoute(
+                                      builder: (context) => AuctionDetails(
+                                          Auction(
+                                              '',
+                                              context
+                                                  .read<AuthenticationService>()
+                                                  .getCurrentUserId(),
+                                              _titleController.text.trim(),
+                                              _descriptionController.text
+                                                  .trim(),
+                                              _images,
+                                              Timestamp.fromDate(
+                                                  DateTime.now()),
+                                              context
+                                                  .read<AuthenticationService>()
+                                                  .getCurrentUserEmail(),
+                                              false,
+                                              _priceController.text,
+                                              _locationController.text,
+                                              true))));
+                            }),
+                      ),
+                    ),
+                    Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: CupertinoButton.filled(
-                        child: Text('Add auction'),
-                        onPressed: () async {
-                          await this.performFuture(() => addAuction(context));
-                        },
+                      child: SizedBox(
+                        width: 250,
+                        child: CupertinoButton.filled(
+                          child: Text('Add auction'),
+                          onPressed: () async {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            await this.performFuture(() => addAuction(context));
+                          },
+                        ),
                       ),
                     ),
                   ],
@@ -246,7 +284,8 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
 
     for (var imageAsset in _images) {
       final imageName = uuid.v4();
-      File imageFile = await getImageFileFromAssets(imageAsset);
+      File imageFile = File(
+          await FlutterAbsolutePath.getAbsolutePath(imageAsset.identifier));
 
       final taskSnapshot = await _storage
           .ref('$loggedUser/$imageName')
@@ -257,22 +296,7 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
 
       final imageUrl = await taskSnapshot.ref.getDownloadURL();
 
-      setState(() {
-        _imageUrls.add(imageUrl);
-      });
+      _imageUrls.add(imageUrl);
     }
-  }
-
-  Future<File> getImageFileFromAssets(Asset asset) async {
-    final byteData = await asset.getByteData();
-
-    final tempFile =
-        File("${(await getTemporaryDirectory()).path}/${asset.name}");
-    final file = await tempFile.writeAsBytes(
-      byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes),
-    );
-
-    return file;
   }
 }

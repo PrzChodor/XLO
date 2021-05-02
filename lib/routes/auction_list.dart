@@ -61,7 +61,8 @@ class _AuctionListState extends State<AuctionList> {
                               a['email'],
                               a['archived'],
                               a['price'],
-                              a['place']))
+                              a['place'],
+                              false))
                           .toList();
 
                       return SliverPadding(

@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +12,12 @@ import 'package:xlo_auction_app/routes/chat.dart';
 import 'package:xlo_auction_app/routes/new_auction.dart';
 import 'package:xlo_auction_app/routes/user_profile.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     AuctionList(),
     ArchiveAuction(),
@@ -18,6 +25,21 @@ class HomePage extends StatelessWidget {
     Chat(),
     UserProfile()
   ];
+
+  final CupertinoTabController _tabController = CupertinoTabController();
+  int previous = 0;
+
+  @override
+  void initState() {
+    _tabController.addListener(() {
+      if (_tabController.index == 2) {
+        Navigator.of(context, rootNavigator: true)
+            .push(CupertinoPageRoute(builder: (context) => NewAuction()));
+        _tabController.index = previous;
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +56,9 @@ class HomePage extends StatelessWidget {
           ),
         ],
         child: CupertinoTabScaffold(
+          controller: _tabController,
           tabBar: CupertinoTabBar(
-            backgroundColor:
-                CupertinoTheme.of(context).barBackgroundColor.withOpacity(1.0),
+            backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.search),
@@ -61,6 +83,12 @@ class HomePage extends StatelessWidget {
             ],
           ),
           tabBuilder: (context, index) {
+            if (index == 2) {
+              return _pages[previous];
+            }
+            if (_tabController.index != 2) {
+              previous = _tabController.index;
+            }
             return _pages[index];
           },
         ));

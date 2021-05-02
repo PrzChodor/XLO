@@ -11,6 +11,7 @@ class Auction {
   final bool archived;
   final String price;
   final String place;
+  final bool test;
 
   Auction(
       this.auctionID,
@@ -22,5 +23,6 @@ class Auction {
       this.email,
       this.archived,
       this.price,
-      this.place);
+      this.place,
+      this.test);
 }

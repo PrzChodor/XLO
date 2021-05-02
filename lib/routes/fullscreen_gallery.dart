@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 class FullscreenGallery extends StatefulWidget {
   final List<String> images;
   final int index;
+  final bool test;
 
-  FullscreenGallery(this.images, this.index);
+  FullscreenGallery(this.images, this.index, this.test);
 
   @override
   _FullscreenGalleryState createState() => _FullscreenGalleryState();
@@ -88,10 +91,15 @@ class _FullscreenGalleryState extends State<FullscreenGallery> {
                             transform: Matrix4.diagonal3(
                                 Vector3(_scale, _scale, _scale)),
                             alignment: getZoomAlignment(),
-                            child: Image.network(
-                              image,
-                              fit: BoxFit.contain,
-                            ),
+                            child: widget.test
+                                ? Image.file(
+                                    File(image),
+                                    fit: BoxFit.contain,
+                                  )
+                                : Image.network(
+                                    image,
+                                    fit: BoxFit.contain,
+                                  ),
                           ),
                       ]),
                 )),
