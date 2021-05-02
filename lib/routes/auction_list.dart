@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,33 @@ class AuctionList extends StatefulWidget {
 }
 
 class _AuctionListState extends State<AuctionList> {
+  List<Auction> _auctions = [];
+  Search currentSearch;
+  bool _searching = false;
+  String prev = '';
+  final TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    searchController.addListener(() {
+      if (searchController.text != prev) {
+        currentSearch?.cancel();
+        currentSearch = Search();
+        startSearch(currentSearch);
+        prev = searchController.text;
+      }
+    });
+    currentSearch = Search();
+    startSearch(currentSearch);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoTabView(
@@ -26,78 +54,84 @@ class _AuctionListState extends State<AuctionList> {
                   largeTitle: Text("Auctions"),
                 ),
                 SliverPersistentHeader(
-                  delegate: SilverSearchBarDelegate(child: SearchBar()),
+                  delegate: SilverSearchBarDelegate(
+                      child: SearchBar(searchController)),
                   pinned: true,
                   floating: false,
                 ),
-                StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('auctions')
-                        .where('archived', isEqualTo: false)
-                        .orderBy('date', descending: true)
-                        .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (!snapshot.hasData) {
-                        return SliverFillRemaining(
-                          child: Center(
-                            child: CupertinoActivityIndicator(
-                              radius: min(
-                                  MediaQuery.of(context).size.width * 0.1,
-                                  MediaQuery.of(context).size.height * 0.1),
-                            ),
+                _searching
+                    ? SliverFillRemaining(
+                        child: Center(
+                          child: CupertinoActivityIndicator(
+                            radius: min(MediaQuery.of(context).size.width * 0.1,
+                                MediaQuery.of(context).size.height * 0.1),
                           ),
-                        );
-                      }
-
-                      List<Auction> auctions = snapshot.data.docs
-                          .map<Auction>((a) => Auction(
-                              a.id,
-                              a['ownerID'],
-                              a['title'],
-                              a['description'],
-                              a['images'],
-                              a['date'],
-                              a['email'],
-                              a['archived'],
-                              a['price'],
-                              a['place'],
-                              false))
-                          .toList();
-
-                      return SliverPadding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        sliver: SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) => Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Card(
-                              color:
-                                  CupertinoTheme.of(context).barBackgroundColor,
-                              clipBehavior: Clip.antiAlias,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              elevation: 0.0,
-                              child: InkWell(
-                                child: AuctionItem(
-                                    auctions[index].images[0],
-                                    auctions[index].title,
-                                    auctions[index].dateTime.toDate(),
-                                    auctions[index].price,
-                                    auctions[index].place),
-                                onTap: () => Navigator.of(context,
-                                        rootNavigator: true)
-                                    .push(CupertinoPageRoute(
-                                        builder: (context) =>
-                                            AuctionDetails(auctions[index]))),
+                        ),
+                      )
+                    : _auctions.isEmpty
+                        ? SliverFillRemaining(
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.sentiment_dissatisfied_outlined,
+                                    size: 128,
+                                    color: CupertinoTheme.of(context)
+                                        .textTheme
+                                        .navLargeTitleTextStyle
+                                        .color
+                                        .withOpacity(0.2),
+                                  ),
+                                  Text(
+                                    'No results',
+                                    style: CupertinoTheme.of(context)
+                                        .textTheme
+                                        .navLargeTitleTextStyle
+                                        .merge(TextStyle(
+                                            color: CupertinoTheme.of(context)
+                                                .textTheme
+                                                .navLargeTitleTextStyle
+                                                .color
+                                                .withOpacity(0.2))),
+                                  )
+                                ],
                               ),
                             ),
-                          ),
-                          childCount: auctions.length,
-                        )),
-                      );
-                    })
+                          )
+                        : SliverPadding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            sliver: SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) => Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Card(
+                                  color: CupertinoTheme.of(context)
+                                      .barBackgroundColor,
+                                  clipBehavior: Clip.antiAlias,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  elevation: 0.0,
+                                  child: InkWell(
+                                    child: AuctionItem(
+                                        _auctions[index].images[0],
+                                        _auctions[index].title,
+                                        _auctions[index].dateTime.toDate(),
+                                        _auctions[index].price,
+                                        _auctions[index].place),
+                                    onTap: () => Navigator.of(context,
+                                            rootNavigator: true)
+                                        .push(CupertinoPageRoute(
+                                            builder: (context) =>
+                                                AuctionDetails(
+                                                    _auctions[index]))),
+                                  ),
+                                ),
+                              ),
+                              childCount: _auctions.length,
+                            )),
+                          )
               ],
             ),
           ),
@@ -105,16 +139,70 @@ class _AuctionListState extends State<AuctionList> {
       },
     );
   }
+
+  void startSearch(Search search) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    if (search.isCancelled()) return;
+
+    _auctions.clear();
+    List<String> results = [];
+
+    setState(() {
+      _searching = true;
+    });
+
+    Algolia algolia = Algolia.init(
+      applicationId: 'NLFY2U8IFV',
+      apiKey: '4a04acd1a08d627e779699706005df55',
+    );
+
+    AlgoliaQuery query = algolia.instance.index('auctions');
+    query = query
+        .query(searchController.text)
+        .filters('archived:false')
+        .setHitsPerPage(10)
+        .setPage(0);
+
+    (await query.getObjects()).hits.forEach((element) {
+      results.add(element.data['objectID']);
+    });
+    if (search.isCancelled()) return;
+
+    if (results.isNotEmpty) {
+      var docs = await FirebaseFirestore.instance
+          .collection('auctions')
+          .where('__name__', whereIn: results)
+          .get()
+          .then((snapshot) => snapshot.docs);
+      if (search.isCancelled()) return;
+
+      _auctions = docs
+          .map<Auction>((a) => Auction(
+              a.id,
+              a['ownerID'],
+              a['title'],
+              a['description'],
+              a['images'],
+              a['date'],
+              a['email'],
+              a['archived'],
+              a['price'],
+              a['place'],
+              false))
+          .toList();
+      _auctions.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    }
+    setState(() {
+      _searching = false;
+    });
+  }
 }
 
 class SilverSearchBarDelegate extends SliverPersistentHeaderDelegate {
   final Widget child;
   final double height;
 
-  const SilverSearchBarDelegate({
-    @required this.child,
-    this.height = 52,
-  });
+  const SilverSearchBarDelegate({@required this.child, this.height = 52});
 
   @override
   Widget build(
@@ -135,6 +223,10 @@ class SilverSearchBarDelegate extends SliverPersistentHeaderDelegate {
 }
 
 class SearchBar extends StatefulWidget {
+  final TextEditingController searchController;
+
+  SearchBar(this.searchController);
+
   @override
   State<StatefulWidget> createState() => _SearchBar();
 }
@@ -148,7 +240,20 @@ class _SearchBar extends State<SearchBar> {
       child: CupertinoSearchTextField(
         prefixInsets: EdgeInsetsDirectional.fromSTEB(6, 0, 0, 0),
         suffixInsets: EdgeInsetsDirectional.fromSTEB(0, 0, 6, 0),
+        controller: widget.searchController,
       ),
     );
+  }
+}
+
+class Search {
+  bool _cancelled = false;
+
+  void cancel() {
+    _cancelled = true;
+  }
+
+  bool isCancelled() {
+    return this._cancelled;
   }
 }

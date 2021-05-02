@@ -38,6 +38,8 @@ dependencies:
   google_sign_in: ^5.0.2
   flutter_facebook_auth: ^3.3.3+1
   flutter_absolute_path: ^1.0.6
+  algolia: ^1.0.1
+  async: ^2.5.0
 
 dev_dependencies:
   flutter_test:

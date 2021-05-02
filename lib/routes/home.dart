@@ -35,6 +35,9 @@ class _HomePageState extends State<HomePage> {
             .push(CupertinoPageRoute(builder: (context) => NewAuction()));
         _tabController.index = previous;
       }
+      if (_tabController.index != previous) {
+        FocusScope.of(context).unfocus();
+      }
     });
     super.initState();
   }
