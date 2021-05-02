@@ -104,28 +104,33 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
                         child: CupertinoButton(
                             child: Text('Preview auction'),
                             onPressed: () {
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              Navigator.of(context, rootNavigator: true).push(
-                                  CupertinoPageRoute(
-                                      builder: (context) => AuctionDetails(
-                                          Auction(
-                                              '',
-                                              context
-                                                  .read<AuthenticationService>()
-                                                  .getCurrentUserId(),
-                                              _titleController.text.trim(),
-                                              _descriptionController.text
-                                                  .trim(),
-                                              _images,
-                                              Timestamp.fromDate(
-                                                  DateTime.now()),
-                                              context
-                                                  .read<AuthenticationService>()
-                                                  .getCurrentUserEmail(),
-                                              false,
-                                              _priceController.text,
-                                              _locationController.text,
-                                              true))));
+                              if (isNewAuctionValid()) {
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
+                                Navigator.of(context, rootNavigator: true).push(
+                                    CupertinoPageRoute(
+                                        builder: (context) => AuctionDetails(
+                                            Auction(
+                                                '',
+                                                context
+                                                    .read<
+                                                        AuthenticationService>()
+                                                    .getCurrentUserId(),
+                                                _titleController.text.trim(),
+                                                _descriptionController.text
+                                                    .trim(),
+                                                _images,
+                                                Timestamp.fromDate(
+                                                    DateTime.now()),
+                                                context
+                                                    .read<
+                                                        AuthenticationService>()
+                                                    .getCurrentUserEmail(),
+                                                false,
+                                                _priceController.text,
+                                                _locationController.text,
+                                                true))));
+                              }
                             }),
                       ),
                     ),
@@ -163,6 +168,7 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
 
   Future<void> loadAssets() async {
     List<Asset> resultList = <Asset>[];
+    FocusScope.of(context).requestFocus(FocusNode());
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 10,
@@ -231,23 +237,7 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
   }
 
   Future<void> addAuction(BuildContext context) async {
-    if (_titleController.text.trim().isEmpty) {
-      showNotification(context, "Error", "Enter title!");
-      return;
-    } else if (_descriptionController.text.trim().isEmpty) {
-      showNotification(context, "Error", "Enter description!");
-      return;
-    } else if (_locationController.text.trim().isEmpty) {
-      showNotification(context, "Error", "Enter location!");
-      return;
-    } else if (_priceController.text.trim().isEmpty) {
-      showNotification(context, "Error", "Enter price!");
-      return;
-    } else if (_images.isEmpty) {
-      showNotification(context, "Error", "Select atleast one image!");
-      return;
-    }
-
+    if (!isNewAuctionValid()) return;
     final _auth = context.read<AuthenticationService>();
     final _firestore = context.read<FirebaseFirestore>();
 
@@ -298,5 +288,29 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
 
       _imageUrls.add(imageUrl);
     }
+  }
+
+  bool isNewAuctionValid() {
+    if (_titleController.text.trim().isEmpty) {
+      showNotification(context, "Error", "Enter title!");
+      return false;
+    }
+    if (_descriptionController.text.trim().isEmpty) {
+      showNotification(context, "Error", "Enter description!");
+      return false;
+    }
+    if (_locationController.text.trim().isEmpty) {
+      showNotification(context, "Error", "Enter location!");
+      return false;
+    }
+    if (_priceController.text.trim().isEmpty) {
+      showNotification(context, "Error", "Enter price!");
+      return false;
+    }
+    if (_images.isEmpty) {
+      showNotification(context, "Error", "Select atleast one image!");
+      return false;
+    }
+    return true;
   }
 }
