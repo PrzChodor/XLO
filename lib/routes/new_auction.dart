@@ -1,6 +1,7 @@
 import 'dart:developer' as dev;
 import 'dart:io';
 import 'dart:math';
+import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -235,7 +236,7 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
           }
         }));
   }
-
+  
   Future<void> addAuction(BuildContext context) async {
     if (!isNewAuctionValid()) return;
     final _auth = context.read<AuthenticationService>();
@@ -257,14 +258,33 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
           'price': _priceController.text,
           'place': _locationController.text.trim()
         })
-        .then((value) => {
-              showNotification(
-                  context, 'Success', 'Auction added successfully'),
-              Navigator.pop(context)
-            })
+        .then((doc) => addToAlgolia(doc).catchError((error, stackTrace) {
+              showNotification(context, 'Error', "Failed to add auction!");
+              _auctions.doc(doc.id).delete();
+            }))
         .catchError((error, stackTrace) {
-          showNotification(context, 'Error', "Failed to add auction!\n$error");
+          showNotification(context, 'Error', "Failed to add auction!");
         });
+  }
+
+  Future<void> addToAlgolia(DocumentReference doc) async {
+    Algolia algolia = Algolia.init(
+      applicationId: 'NLFY2U8IFV',
+      apiKey: '1418a0c042a56d3171523522ad666b93',
+    );
+
+    AlgoliaIndexReference index = algolia.instance.index('auctions');
+    await index.addObject({
+      'objectID': doc.id,
+      'title': _titleController.text.trim(),
+      'date': Timestamp.fromDate(DateTime.now()).seconds,
+      'archived': false
+    }).then((value) {
+      Navigator.pop(context);
+      showNotification(context, 'Success', 'Auction added successfully');
+    }).catchError((error, stackTrace) {
+      throw (error);
+    });
   }
 
   Future<void> uploadImages(BuildContext context) async {

@@ -120,12 +120,14 @@ class _AuctionListState extends State<AuctionList> {
                                         _auctions[index].dateTime.toDate(),
                                         _auctions[index].price,
                                         _auctions[index].place),
-                                    onTap: () => Navigator.of(context,
-                                            rootNavigator: true)
-                                        .push(CupertinoPageRoute(
-                                            builder: (context) =>
-                                                AuctionDetails(
-                                                    _auctions[index]))),
+                                    onTap: () {
+                                      FocusScope.of(context).unfocus();
+                                      Navigator.of(context, rootNavigator: true)
+                                          .push(CupertinoPageRoute(
+                                              builder: (context) =>
+                                                  AuctionDetails(
+                                                      _auctions[index])));
+                                    },
                                   ),
                                 ),
                               ),
