@@ -47,14 +47,14 @@ class _AuctionListState extends State<AuctionList> {
       builder: (context) {
         return CupertinoPageScaffold(
             child: SafeArea(
-          child: CupertinoScrollbar(
-            child: CustomScrollView(
-              slivers: [
-                CupertinoSliverNavigationBar(
-                  largeTitle: Text("Auctions"),
-                ),
-                SliverPersistentHeader(
-                  delegate: SilverSearchBarDelegate(
+              child: CupertinoScrollbar(
+                child: CustomScrollView(
+                slivers: [
+                  CupertinoSliverNavigationBar(
+                    largeTitle: Text("Auctions"),
+                  ),
+                  SliverPersistentHeader(
+                    delegate: SilverSearchBarDelegate(
                       child: SearchBar(searchController)),
                   pinned: true,
                   floating: false,

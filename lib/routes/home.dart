@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:xlo_auction_app/routes/archive_auction.dart';
+import 'package:xlo_auction_app/routes/watchlist.dart';
 import 'package:xlo_auction_app/routes/auction_list.dart';
 import 'package:xlo_auction_app/routes/chat.dart';
 import 'package:xlo_auction_app/routes/new_auction.dart';
@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     AuctionList(),
-    ArchiveAuction(),
+    Watchlist(),
     NewAuction(),
     Chat(),
     UserProfile()
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.heart),
-            label: 'Favorites',
+            label: 'Watchlist',
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.plus_circle),
