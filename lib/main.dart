@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +22,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider<FirebaseFirestore>(
+          create: (_) => FirebaseFirestore.instance,
+        ),
+        Provider<FirebaseStorage>(
+          create: (_) => FirebaseStorage.instance,
+        ),
         Provider<AuthenticationService>(
           create: (_) => AuthenticationService(),
         ),
@@ -35,7 +43,7 @@ class MyApp extends StatelessWidget {
         theme: CustomTheme.customTheme,
         routes: {
           '/': (context) => AuthenticationWrapper(),
-          '/signIn': (context) => SignIn(),
+          '/register': (context) => Register(),
         },
       ),
     );
@@ -58,6 +66,6 @@ class AuthenticationWrapper extends StatelessWidget {
     if (firebaseUser != null) {
       return HomePage();
     }
-    return Register();
+    return SignIn();
   }
 }

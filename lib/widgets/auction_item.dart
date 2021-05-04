@@ -2,30 +2,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AuctionItem extends StatelessWidget {
-  final image;
-  final title;
-  final timeSince;
-  final price;
-  final place;
+  final _image;
+  final _title;
+  final _timeSince;
+  final _price;
+  final _place;
 
-  AuctionItem._(this.image, this.title, this.timeSince, this.price, this.place);
+  AuctionItem._(
+      this._image, this._title, this._timeSince, this._price, this._place);
 
   factory AuctionItem(image, title, dateTime, price, place) {
     var difference = DateTime.now().difference(dateTime);
     String time;
 
-    if ((difference.inDays / 365).floor() > 0)
+    if ((difference.inDays / 365).floor() > 0) {
       time = " ${(difference.inDays / 365).floor()} y";
-    else if ((difference.inDays / 30).floor() > 0)
+    } else if ((difference.inDays / 30).floor() > 0) {
       time = " ${(difference.inDays / 30).floor()} m";
-    else if (difference.inDays > 0)
+    } else if (difference.inDays > 0) {
       time = " ${difference.inDays} d";
-    else if (difference.inHours > 0)
+    } else if (difference.inHours > 0) {
       time = " ${difference.inHours} h";
-    else if (difference.inMinutes > 0)
+    } else if (difference.inMinutes > 0) {
       time = " ${difference.inMinutes} min";
-    else
+    } else {
       time = " ${difference.inSeconds} s";
+    }
 
     return new AuctionItem._(image, title, time, price, place);
   }
@@ -35,7 +37,7 @@ class AuctionItem extends StatelessWidget {
     return Row(
       children: [
         Image.network(
-          image,
+          _image,
           width: 128,
           height: 128,
           fit: BoxFit.cover,
@@ -62,7 +64,7 @@ class AuctionItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Align(
-                    child: Text(title,
+                    child: Text(_title,
                         style: new TextStyle(
                             fontSize: 16,
                             color: CupertinoTheme.of(context)
@@ -75,7 +77,7 @@ class AuctionItem extends StatelessWidget {
                   ),
                   Align(
                     child: Text(
-                      "$price zł",
+                      "$_price zł",
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -87,7 +89,7 @@ class AuctionItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        place,
+                        _place,
                         style: TextStyle(
                             color: CupertinoTheme.of(context)
                                 .textTheme
@@ -97,7 +99,7 @@ class AuctionItem extends StatelessWidget {
                       Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                         Icon(Icons.history),
                         Text(
-                          timeSince,
+                          _timeSince,
                           style: TextStyle(
                               color: CupertinoTheme.of(context)
                                   .textTheme

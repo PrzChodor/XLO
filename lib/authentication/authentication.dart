@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:xlo_auction_app/widgets/notification.dart';
 
 class AuthenticationService {
@@ -36,6 +38,51 @@ class AuthenticationService {
 
     if (_authenticator.currentUser != null) {
       isSignedIn = true;
+    }
+
+    return isSignedIn;
+  }
+
+  Future<bool> signInWithGoogle({@required BuildContext context}) async {
+    var isSignedIn = false;
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+      await _authenticator.signInWithCredential(credential);
+    }
+
+    if (_authenticator.currentUser != null) {
+      isSignedIn = true;
+    }
+
+    return isSignedIn;
+  }
+
+  Future<bool> signInWithFacebook({@required BuildContext context}) async {
+    var isSignedIn = false;
+    final LoginResult result = await FacebookAuth.instance.login();
+
+    if (result.accessToken != null) {
+      final facebookAuthCredential =
+          FacebookAuthProvider.credential(result.accessToken.token);
+
+      await _authenticator.signInWithCredential(facebookAuthCredential);
+    }
+    if (_authenticator.currentUser != null) {
+      isSignedIn = true;
+    }
+
+    if (isSignedIn && !_authenticator.currentUser.emailVerified) {
+      _authenticator.currentUser.sendEmailVerification();
     }
 
     return isSignedIn;

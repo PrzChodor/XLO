@@ -6,6 +6,8 @@
 	<string>547672813506-g99nm60sp6mi3ruantqki8qhkgf1icnq.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.547672813506-g99nm60sp6mi3ruantqki8qhkgf1icnq</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>547672813506-5rma9p3hmcs7tiulejem36vrg5mt24k9.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyCB1JYvjUyIZNajLHg4T9LfgJ30ghIQHfE</string>
 	<key>GCM_SENDER_ID</key>
@@ -30,5 +32,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:547672813506:ios:92d7156184b9d07e09305b</string>
+	<key>DATABASE_URL</key>
+	<string>https://xlo-auction-app-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>
