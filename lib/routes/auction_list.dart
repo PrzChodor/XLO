@@ -46,98 +46,105 @@ class _AuctionListState extends State<AuctionList> {
     return CupertinoTabView(
       builder: (context) {
         return CupertinoPageScaffold(
-            child: SafeArea(
-              child: CupertinoScrollbar(
-                child: CustomScrollView(
+          child: SafeArea(
+            child: CupertinoScrollbar(
+              child: CustomScrollView(
                 slivers: [
                   CupertinoSliverNavigationBar(
                     largeTitle: Text("Auctions"),
                   ),
                   SliverPersistentHeader(
                     delegate: SilverSearchBarDelegate(
-                      child: SearchBar(searchController)),
-                  pinned: true,
-                  floating: false,
-                ),
-                _searching
-                    ? SliverFillRemaining(
-                        child: Center(
-                          child: CupertinoActivityIndicator(
-                            radius: min(MediaQuery.of(context).size.width * 0.1,
-                                MediaQuery.of(context).size.height * 0.1),
-                          ),
-                        ),
-                      )
-                    : _auctions.isEmpty
-                        ? SliverFillRemaining(
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.sentiment_dissatisfied_outlined,
-                                    size: 128,
-                                    color: CupertinoTheme.of(context)
-                                        .textTheme
-                                        .navLargeTitleTextStyle
-                                        .color
-                                        .withOpacity(0.2),
-                                  ),
-                                  Text(
-                                    'No results',
-                                    style: CupertinoTheme.of(context)
-                                        .textTheme
-                                        .navLargeTitleTextStyle
-                                        .merge(TextStyle(
-                                            color: CupertinoTheme.of(context)
-                                                .textTheme
-                                                .navLargeTitleTextStyle
-                                                .color
-                                                .withOpacity(0.2))),
-                                  )
-                                ],
-                              ),
+                        child: SearchBar(searchController)),
+                    pinned: true,
+                    floating: false,
+                  ),
+                  _searching
+                      ? SliverFillRemaining(
+                          child: Center(
+                            child: CupertinoActivityIndicator(
+                              radius: min(
+                                  MediaQuery.of(context).size.width * 0.1,
+                                  MediaQuery.of(context).size.height * 0.1),
                             ),
-                          )
-                        : SliverPadding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            sliver: SliverList(
-                                delegate: SliverChildBuilderDelegate(
-                              (BuildContext context, int index) => Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Card(
-                                  color: CupertinoTheme.of(context)
-                                      .barBackgroundColor,
-                                  clipBehavior: Clip.antiAlias,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  elevation: 0.0,
-                                  child: InkWell(
-                                    child: AuctionItem(
-                                        _auctions[index].images[0],
-                                        _auctions[index].title,
-                                        _auctions[index].dateTime.toDate(),
-                                        _auctions[index].price,
-                                        _auctions[index].place),
-                                    onTap: () {
-                                      FocusScope.of(context).unfocus();
-                                      Navigator.of(context, rootNavigator: true)
-                                          .push(CupertinoPageRoute(
-                                              builder: (context) =>
-                                                  AuctionDetails(
-                                                      _auctions[index])));
-                                    },
-                                  ),
+                          ),
+                        )
+                      : _auctions.isEmpty
+                          ? SliverFillRemaining(
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.sentiment_dissatisfied_outlined,
+                                      size: 128,
+                                      color: CupertinoTheme.of(context)
+                                          .textTheme
+                                          .navLargeTitleTextStyle
+                                          .color
+                                          .withOpacity(0.2),
+                                    ),
+                                    Text(
+                                      'No results',
+                                      style: CupertinoTheme.of(context)
+                                          .textTheme
+                                          .navLargeTitleTextStyle
+                                          .merge(TextStyle(
+                                              color: CupertinoTheme.of(context)
+                                                  .textTheme
+                                                  .navLargeTitleTextStyle
+                                                  .color
+                                                  .withOpacity(0.2))),
+                                    )
+                                  ],
                                 ),
                               ),
-                              childCount: _auctions.length,
-                            )),
-                          )
-              ],
+                            )
+                          : SliverPadding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              sliver: SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  (BuildContext context, int index) => Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Card(
+                                      color: CupertinoTheme.of(context)
+                                          .barBackgroundColor,
+                                      clipBehavior: Clip.antiAlias,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      elevation: 0.0,
+                                      child: InkWell(
+                                        child: AuctionItem(
+                                            _auctions[index].images[0],
+                                            _auctions[index].title,
+                                            _auctions[index].dateTime.toDate(),
+                                            _auctions[index].price,
+                                            _auctions[index].place),
+                                        onTap: () {
+                                          FocusScope.of(context).unfocus();
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .push(
+                                            CupertinoPageRoute(
+                                              builder: (context) =>
+                                                  AuctionDetails(
+                                                      _auctions[index]),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  childCount: _auctions.length,
+                                ),
+                              ),
+                            ),
+                ],
+              ),
             ),
           ),
-        ));
+        );
       },
     );
   }

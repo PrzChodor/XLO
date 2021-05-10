@@ -1,15 +1,26 @@
 import 'dart:math';
 import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:xlo_auction_app/model/chatMessage.dart';
+import 'package:xlo_auction_app/model/chat_message.dart';
 import 'package:intl/intl.dart';
+import 'package:xlo_auction_app/model/date_formatter.dart';
 
 class Chat extends StatefulWidget {
+  final String senderUsername;
+  final String receiverUsername;
+  final String sender;
+  final String receiver;
+
+  Chat(
+      {@required this.senderUsername,
+      @required this.receiverUsername,
+      @required this.sender,
+      @required this.receiver});
+
   @override
   _ChatState createState() => _ChatState();
 }
@@ -17,10 +28,6 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> with TickerProviderStateMixin {
   final _inputTextController = TextEditingController();
   List<ChatMessage> messages = [];
-  // lappop
-  static const String sender = 'sQqGbK2fJsMdJp2wW5gU6pOguQs2';
-  // bartosz
-  static const String receiver = '9otfUuuSCrPtgZKmNlpx6bgyXH82';
   int isMessageDateShownIndex = -1;
 
   @override
@@ -32,17 +39,18 @@ class _ChatState extends State<Chat> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      resizeToAvoidBottomInset: false,
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Chat'),
+        middle: Text(widget.receiverUsername),
       ),
       child: Column(
         children: <Widget>[
           StreamBuilder(
             stream: FirebaseFirestore.instance
-                .collection('chat')
-                .doc(sender)
-                .collection(receiver)
+                .collection('user')
+                .doc(widget.sender)
+                .collection('chats')
+                .doc(widget.receiver)
+                .collection('messages')
                 .orderBy('date', descending: false)
                 .snapshots(),
             builder:
@@ -131,7 +139,7 @@ class _ChatState extends State<Chat> with TickerProviderStateMixin {
                                       ? null
                                       : 0.0,
                                   child: Text(
-                                    convertTimestampToDate(
+                                    DateFormatter.convertTimestampToDate(
                                         messages[index].date),
                                     style: TextStyle(
                                         color: CupertinoColors.inactiveGray,
@@ -194,42 +202,55 @@ class _ChatState extends State<Chat> with TickerProviderStateMixin {
   Future<void> addMessage(BuildContext context) async {
     final _firestore = context.read<FirebaseFirestore>();
 
-    DocumentReference _senderChat =
-        _firestore.collection('chat').doc(sender).collection(receiver).doc();
-    DocumentReference _receiverChat =
-        _firestore.collection('chat').doc(receiver).collection(sender).doc();
+    DocumentReference _senderChats = _firestore
+        .collection('user')
+        .doc(widget.sender)
+        .collection('chats')
+        .doc(widget.receiver);
+    DocumentReference _receiverChats = _firestore
+        .collection('user')
+        .doc(widget.receiver)
+        .collection('chats')
+        .doc(widget.sender);
+
+    _senderChats.set({
+      'username': widget.receiverUsername,
+      'message': _inputTextController.text,
+      'date': DateTime.now(),
+    });
+    _receiverChats.set({
+      'username': widget.senderUsername,
+      'message': _inputTextController.text,
+      'date': DateTime.now(),
+    });
+
+    DocumentReference _senderChatDocument = _firestore
+        .collection('user')
+        .doc(widget.sender)
+        .collection('chats')
+        .doc(widget.receiver)
+        .collection('messages')
+        .doc();
+    DocumentReference _receiverChatDocument = _firestore
+        .collection('user')
+        .doc(widget.receiver)
+        .collection('chats')
+        .doc(widget.sender)
+        .collection('messages')
+        .doc();
 
     var batch = _firestore.batch();
-    batch.set(_senderChat, {
+    batch.set(_senderChatDocument, {
       'isSender': true,
       'message': _inputTextController.text,
-      'date': DateTime.now()
+      'date': DateTime.now(),
     });
-    batch.set(_receiverChat, {
+    batch.set(_receiverChatDocument, {
       'isSender': false,
       'message': _inputTextController.text,
-      'date': DateTime.now()
+      'date': DateTime.now(),
     });
     batch.commit().whenComplete(() => print('chat messages added to firebase'));
-  }
-
-  String convertTimestampToDate(Timestamp timestamp) {
-    DateTime messageDateTime = (timestamp).toDate();
-    String formattedDate;
-
-    if (calculateDayDifferenceInDate(messageDateTime) >= 0) {
-      formattedDate = DateFormat('HH:mm').format(messageDateTime);
-    } else {
-      formattedDate = DateFormat('dd.MM kk:mm').format(messageDateTime);
-    }
-    return formattedDate;
-  }
-
-  int calculateDayDifferenceInDate(DateTime date) {
-    DateTime now = DateTime.now();
-    return DateTime(date.year, date.month, date.day)
-        .difference(DateTime(now.year, now.month, now.day))
-        .inDays;
   }
 
   BorderRadius getBorderRadius(int index) {
