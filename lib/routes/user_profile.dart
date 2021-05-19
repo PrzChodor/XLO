@@ -14,6 +14,7 @@ class _UserProfile extends State<UserProfile>{
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthenticationService>(context);
     return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.white,
       child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
