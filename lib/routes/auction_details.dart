@@ -1,12 +1,14 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:xlo_auction_app/model/auction.dart';
 import 'package:intl/intl.dart';
+import 'package:xlo_auction_app/routes/chat.dart';
 import 'package:xlo_auction_app/routes/fullscreen_gallery.dart';
 import 'package:xlo_auction_app/widgets/notification.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+import 'package:provider/provider.dart';
 
 class AuctionDetails extends StatefulWidget {
   final Auction auction;
@@ -51,6 +53,8 @@ class _AuctionDetailsState extends State<AuctionDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final _auth = context.read<AuthenticationService>();
+
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text('Auction details'),
@@ -252,17 +256,35 @@ class _AuctionDetailsState extends State<AuctionDetails> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 16.0),
                                     child: CupertinoButton(
-                                        child: Icon(
-                                          CupertinoIcons.envelope_fill,
-                                          size: 32,
+                                      child: Icon(
+                                        CupertinoIcons.envelope_fill,
+                                        size: 32,
+                                      ),
+                                      onPressed: () => Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (context) => Chat(
+                                            senderUsername: _auth
+                                                .getCurrentUserEmail()
+                                                .substring(
+                                                    0,
+                                                    _auth
+                                                        .getCurrentUserEmail()
+                                                        .indexOf('@')),
+                                            receiverUsername:
+                                                widget.auction.email.substring(
+                                              0,
+                                              widget.auction.email.indexOf('@'),
+                                            ),
+                                            sender: _auth.getCurrentUserId(),
+                                            receiver: widget.auction.ownerID,
+                                          ),
                                         ),
-                                        onPressed: () => showNotification(
-                                            context,
-                                            "UserID",
-                                            widget.auction.ownerID)),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),

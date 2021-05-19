@@ -6,6 +6,8 @@ import 'package:xlo_auction_app/routes/chat.dart';
 import 'package:xlo_auction_app/routes/new_auction.dart';
 import 'package:xlo_auction_app/routes/user_profile.dart';
 
+import 'chat_list.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -16,7 +18,7 @@ class _HomePageState extends State<HomePage> {
     AuctionList(),
     Watchlist(),
     NewAuction(),
-    Chat(),
+    ChatList(),
     UserProfile()
   ];
 
