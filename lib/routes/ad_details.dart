@@ -258,27 +258,34 @@ class _AdDetailsState extends State<AdDetails> {
                                         CupertinoIcons.envelope_fill,
                                         size: 32,
                                       ),
-                                      onPressed: () => Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                          builder: (context) => Chat(
-                                            senderUsername: _auth
-                                                .getCurrentUserEmail()
-                                                .substring(
-                                                    0,
-                                                    _auth
+                                      onPressed: () {
+                                        if(widget.ad.ownerID!=_auth.getCurrentUserId()) {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                              builder: (context) =>
+                                                  Chat(
+                                                    senderUsername: _auth
                                                         .getCurrentUserEmail()
-                                                        .indexOf('@')),
-                                            receiverUsername:
-                                                widget.ad.email.substring(
-                                              0,
-                                              widget.ad.email.indexOf('@'),
+                                                        .substring(
+                                                        0,
+                                                        _auth
+                                                            .getCurrentUserEmail()
+                                                            .indexOf('@')),
+                                                    receiverUsername:
+                                                    widget.ad.email.substring(
+                                                      0,
+                                                      widget.ad.email.indexOf(
+                                                          '@'),
+                                                    ),
+                                                    sender: _auth
+                                                        .getCurrentUserId(),
+                                                    receiver: widget.ad.ownerID,
+                                                  ),
                                             ),
-                                            sender: _auth.getCurrentUserId(),
-                                            receiver: widget.ad.ownerID,
-                                          ),
-                                        ),
-                                      ),
+                                          );
+                                        }
+                                      },
                                     ),
                                   ),
                                 ),
