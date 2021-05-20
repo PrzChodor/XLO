@@ -1,17 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AuctionItem extends StatelessWidget {
+class AdItem extends StatelessWidget {
   final _image;
   final _title;
   final _timeSince;
   final _price;
   final _place;
 
-  AuctionItem._(
-      this._image, this._title, this._timeSince, this._price, this._place);
+  AdItem._(this._image, this._title, this._timeSince, this._price, this._place);
 
-  factory AuctionItem(image, title, dateTime, price, place) {
+  factory AdItem(image, title, dateTime, price, place) {
     var difference = DateTime.now().difference(dateTime);
     String time;
 
@@ -29,7 +28,7 @@ class AuctionItem extends StatelessWidget {
       time = " ${difference.inSeconds} s";
     }
 
-    return new AuctionItem._(image, title, time, price, place);
+    return new AdItem._(image, title, time, price, place);
   }
 
   @override

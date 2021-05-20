@@ -4,17 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:xlo_auction_app/model/auction.dart';
-import 'package:xlo_auction_app/routes/auction_details.dart';
-import 'package:xlo_auction_app/widgets/auction_item.dart';
+import 'package:xlo_auction_app/model/ad.dart';
+import 'package:xlo_auction_app/routes/ad_details.dart';
+import 'package:xlo_auction_app/widgets/ad_item.dart';
 
-class AuctionList extends StatefulWidget {
+class AdList extends StatefulWidget {
   @override
-  _AuctionListState createState() => _AuctionListState();
+  _AdListState createState() => _AdListState();
 }
 
-class _AuctionListState extends State<AuctionList> {
-  List<Auction> _auctions = [];
+class _AdListState extends State<AdList> {
+  List<Ad> _ads = [];
   Search currentSearch;
   bool _searching = false;
   String prev = '';
@@ -51,7 +51,7 @@ class _AuctionListState extends State<AuctionList> {
               child: CustomScrollView(
                 slivers: [
                   CupertinoSliverNavigationBar(
-                    largeTitle: Text("Auctions"),
+                    largeTitle: Text("Advertisements"),
                   ),
                   SliverPersistentHeader(
                     delegate: SilverSearchBarDelegate(
@@ -69,7 +69,7 @@ class _AuctionListState extends State<AuctionList> {
                             ),
                           ),
                         )
-                      : _auctions.isEmpty
+                      : _ads.isEmpty
                           ? SliverFillRemaining(
                               child: Center(
                                 child: Column(
@@ -115,12 +115,12 @@ class _AuctionListState extends State<AuctionList> {
                                       ),
                                       elevation: 0.0,
                                       child: InkWell(
-                                        child: AuctionItem(
-                                            _auctions[index].images[0],
-                                            _auctions[index].title,
-                                            _auctions[index].dateTime.toDate(),
-                                            _auctions[index].price,
-                                            _auctions[index].place),
+                                        child: AdItem(
+                                            _ads[index].images[0],
+                                            _ads[index].title,
+                                            _ads[index].dateTime.toDate(),
+                                            _ads[index].price,
+                                            _ads[index].place),
                                         onTap: () {
                                           FocusScope.of(context).unfocus();
                                           Navigator.of(context,
@@ -128,15 +128,14 @@ class _AuctionListState extends State<AuctionList> {
                                               .push(
                                             CupertinoPageRoute(
                                               builder: (context) =>
-                                                  AuctionDetails(
-                                                      _auctions[index]),
+                                                  AdDetails(_ads[index]),
                                             ),
                                           );
                                         },
                                       ),
                                     ),
                                   ),
-                                  childCount: _auctions.length,
+                                  childCount: _ads.length,
                                 ),
                               ),
                             ),
@@ -153,7 +152,7 @@ class _AuctionListState extends State<AuctionList> {
     await Future.delayed(Duration(milliseconds: 500));
     if (search.isCancelled()) return;
 
-    _auctions.clear();
+    _ads.clear();
     List<String> results = [];
 
     setState(() {
@@ -185,8 +184,8 @@ class _AuctionListState extends State<AuctionList> {
           .then((snapshot) => snapshot.docs);
       if (search.isCancelled()) return;
 
-      _auctions = docs
-          .map<Auction>((a) => Auction(
+      _ads = docs
+          .map<Ad>((a) => Ad(
               a.id,
               a['ownerID'],
               a['title'],
@@ -199,7 +198,7 @@ class _AuctionListState extends State<AuctionList> {
               a['place'],
               false))
           .toList();
-      _auctions.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+      _ads.sort((a, b) => b.dateTime.compareTo(a.dateTime));
     }
     setState(() {
       _searching = false;

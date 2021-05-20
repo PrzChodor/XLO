@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Auction {
-  final String auctionID;
+class Ad {
+  final String adID;
   final String ownerID;
   final String title;
   final String description;
@@ -13,8 +13,8 @@ class Auction {
   final String place;
   final bool test;
 
-  Auction(
-      this.auctionID,
+  Ad(
+      this.adID,
       this.ownerID,
       this.title,
       this.description,

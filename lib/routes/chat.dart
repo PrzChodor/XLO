@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/model/chat_message.dart';
-import 'package:intl/intl.dart';
 import 'package:xlo_auction_app/model/date_formatter.dart';
 
 class Chat extends StatefulWidget {

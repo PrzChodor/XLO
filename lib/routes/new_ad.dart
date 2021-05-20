@@ -11,20 +11,20 @@ import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
-import 'package:xlo_auction_app/model/auction.dart';
-import 'package:xlo_auction_app/routes/auction_details.dart';
+import 'package:xlo_auction_app/model/ad.dart';
+import 'package:xlo_auction_app/routes/ad_details.dart';
 import 'package:xlo_auction_app/widgets/notification.dart';
 import 'package:uuid/uuid.dart';
 import 'package:screen_loader/screen_loader.dart';
 
 var uuid = Uuid();
 
-class NewAuction extends StatefulWidget {
+class NewAd extends StatefulWidget {
   @override
-  _NewAuction createState() => _NewAuction();
+  _NewAd createState() => _NewAd();
 }
 
-class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
+class _NewAd extends State<NewAd> with ScreenLoader<NewAd> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
@@ -46,7 +46,7 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
     return WillPopScope(
       child: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          middle: Text('Add auction'),
+          middle: Text('Add advertisement'),
         ),
         child: SafeArea(
           child: LayoutBuilder(builder: (context, constraints) {
@@ -103,34 +103,29 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
                       child: Container(
                         width: 250,
                         child: CupertinoButton(
-                            child: Text('Preview auction'),
+                            child: Text('Preview advertisement'),
                             onPressed: () {
-                              if (isNewAuctionValid()) {
+                              if (isNewAdValid()) {
                                 FocusScope.of(context)
                                     .requestFocus(FocusNode());
                                 Navigator.of(context, rootNavigator: true).push(
                                     CupertinoPageRoute(
-                                        builder: (context) => AuctionDetails(
-                                            Auction(
-                                                '',
-                                                context
-                                                    .read<
-                                                        AuthenticationService>()
-                                                    .getCurrentUserId(),
-                                                _titleController.text.trim(),
-                                                _descriptionController.text
-                                                    .trim(),
-                                                _images,
-                                                Timestamp.fromDate(
-                                                    DateTime.now()),
-                                                context
-                                                    .read<
-                                                        AuthenticationService>()
-                                                    .getCurrentUserEmail(),
-                                                false,
-                                                _priceController.text,
-                                                _locationController.text,
-                                                true))));
+                                        builder: (context) => AdDetails(Ad(
+                                            '',
+                                            context
+                                                .read<AuthenticationService>()
+                                                .getCurrentUserId(),
+                                            _titleController.text.trim(),
+                                            _descriptionController.text.trim(),
+                                            _images,
+                                            Timestamp.fromDate(DateTime.now()),
+                                            context
+                                                .read<AuthenticationService>()
+                                                .getCurrentUserEmail(),
+                                            false,
+                                            _priceController.text,
+                                            _locationController.text,
+                                            true))));
                               }
                             }),
                       ),
@@ -140,10 +135,11 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
                       child: SizedBox(
                         width: 250,
                         child: CupertinoButton.filled(
-                          child: Text('Add auction'),
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('Add advertisement'),
                           onPressed: () async {
                             FocusScope.of(context).requestFocus(FocusNode());
-                            await this.performFuture(() => addAuction(context));
+                            await this.performFuture(() => addAd(context));
                           },
                         ),
                       ),
@@ -236,17 +232,17 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
           }
         }));
   }
-  
-  Future<void> addAuction(BuildContext context) async {
-    if (!isNewAuctionValid()) return;
+
+  Future<void> addAd(BuildContext context) async {
+    if (!isNewAdValid()) return;
     final _auth = context.read<AuthenticationService>();
     final _firestore = context.read<FirebaseFirestore>();
 
     await uploadImages(context);
 
-    CollectionReference _auctions = _firestore.collection('auctions');
+    CollectionReference _ads = _firestore.collection('auctions');
 
-    await _auctions
+    await _ads
         .add({
           'title': _titleController.text.trim(),
           'description': _descriptionController.text.trim(),
@@ -259,11 +255,12 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
           'place': _locationController.text.trim()
         })
         .then((doc) => addToAlgolia(doc).catchError((error, stackTrace) {
-              showNotification(context, 'Error', "Failed to add auction!");
-              _auctions.doc(doc.id).delete();
+              showNotification(
+                  context, 'Error', "Failed to add advertisement!");
+              _ads.doc(doc.id).delete();
             }))
         .catchError((error, stackTrace) {
-          showNotification(context, 'Error', "Failed to add auction!");
+          showNotification(context, 'Error', "Failed to add advertisement!");
         });
   }
 
@@ -281,7 +278,7 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
       'archived': false
     }).then((value) {
       Navigator.pop(context);
-      showNotification(context, 'Success', 'Auction added successfully');
+      showNotification(context, 'Success', 'Advertisement added successfully');
     }).catchError((error, stackTrace) {
       throw (error);
     });
@@ -310,7 +307,7 @@ class _NewAuction extends State<NewAuction> with ScreenLoader<NewAuction> {
     }
   }
 
-  bool isNewAuctionValid() {
+  bool isNewAdValid() {
     if (_titleController.text.trim().isEmpty) {
       showNotification(context, "Error", "Enter title!");
       return false;

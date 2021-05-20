@@ -35,7 +35,7 @@ class _UserProfile extends State<UserProfile> {
               ),
             ),
             Text(
-              'Your auctions',
+              'Your advertisements',
               style: CupertinoTheme.of(context)
                   .textTheme
                   .textStyle

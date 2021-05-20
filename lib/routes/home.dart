@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:xlo_auction_app/routes/watchlist.dart';
-import 'package:xlo_auction_app/routes/auction_list.dart';
-import 'package:xlo_auction_app/routes/chat.dart';
-import 'package:xlo_auction_app/routes/new_auction.dart';
+import 'package:xlo_auction_app/routes/ad_list.dart';
+import 'package:xlo_auction_app/routes/new_ad.dart';
 import 'package:xlo_auction_app/routes/user_profile.dart';
 
 import 'chat_list.dart';
@@ -15,9 +14,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
-    AuctionList(),
+    AdList(),
     Watchlist(),
-    NewAuction(),
+    NewAd(),
     ChatList(),
     UserProfile()
   ];
@@ -30,7 +29,7 @@ class _HomePageState extends State<HomePage> {
     _tabController.addListener(() {
       if (_tabController.index == 2) {
         Navigator.of(context, rootNavigator: true)
-            .push(CupertinoPageRoute(builder: (context) => NewAuction()));
+            .push(CupertinoPageRoute(builder: (context) => NewAd()));
         _tabController.index = previous;
       }
       if (_tabController.index != previous) {

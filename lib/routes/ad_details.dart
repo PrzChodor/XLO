@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
-import 'package:xlo_auction_app/model/auction.dart';
+import 'package:xlo_auction_app/model/ad.dart';
 import 'package:intl/intl.dart';
 import 'package:xlo_auction_app/routes/chat.dart';
 import 'package:xlo_auction_app/routes/fullscreen_gallery.dart';
@@ -10,16 +10,16 @@ import 'package:xlo_auction_app/widgets/notification.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:provider/provider.dart';
 
-class AuctionDetails extends StatefulWidget {
-  final Auction auction;
+class AdDetails extends StatefulWidget {
+  final Ad ad;
 
-  AuctionDetails(this.auction);
+  AdDetails(this.ad);
 
   @override
-  State<StatefulWidget> createState() => _AuctionDetailsState();
+  State<StatefulWidget> createState() => _AdDetailsState();
 }
 
-class _AuctionDetailsState extends State<AuctionDetails> {
+class _AdDetailsState extends State<AdDetails> {
   final PageController galleryController = PageController();
   double currentPage = 0;
   List<String> images;
@@ -32,16 +32,16 @@ class _AuctionDetailsState extends State<AuctionDetails> {
 
   @override
   void initState() {
-    if (widget.auction.test) {
+    if (widget.ad.test) {
       images = [];
-      for (Asset image in widget.auction.images) {
+      for (Asset image in widget.ad.images) {
         FlutterAbsolutePath.getAbsolutePath(image.identifier)
             .then((value) => setState(() {
                   images.add(value);
                 }));
       }
     } else {
-      images = List<String>.from(widget.auction.images);
+      images = List<String>.from(widget.ad.images);
     }
     galleryController.addListener(() {
       setState(() {
@@ -57,7 +57,7 @@ class _AuctionDetailsState extends State<AuctionDetails> {
 
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Auction details'),
+        middle: Text('Advertisement details'),
       ),
       child: SafeArea(
         child: LayoutBuilder(builder: (context, constraints) {
@@ -83,7 +83,7 @@ class _AuctionDetailsState extends State<AuctionDetails> {
                               GalleryPage(
                                 images: images,
                                 index: i,
-                                test: widget.auction.test,
+                                test: widget.ad.test,
                               )
                           ],
                         ),
@@ -152,8 +152,8 @@ class _AuctionDetailsState extends State<AuctionDetails> {
                               child: Row(
                                 children: [
                                   Text(
-                                    DateFormat('d MMMM yyyy').format(
-                                        widget.auction.dateTime.toDate()),
+                                    DateFormat('d MMMM yyyy')
+                                        .format(widget.ad.dateTime.toDate()),
                                     style: CupertinoTheme.of(context)
                                         .textTheme
                                         .textStyle
@@ -167,16 +167,14 @@ class _AuctionDetailsState extends State<AuctionDetails> {
                                         CupertinoIcons.heart,
                                       ),
                                       onPressed: () => showNotification(
-                                          context,
-                                          "AuctionID",
-                                          widget.auction.auctionID)),
+                                          context, "AdID", widget.ad.adID)),
                                 ],
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                widget.auction.title,
+                                widget.ad.title,
                                 style: CupertinoTheme.of(context)
                                     .textTheme
                                     .navLargeTitleTextStyle
@@ -187,7 +185,7 @@ class _AuctionDetailsState extends State<AuctionDetails> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(widget.auction.price + " zł",
+                              child: Text(widget.ad.price + " zł",
                                   style: CupertinoTheme.of(context)
                                       .textTheme
                                       .navLargeTitleTextStyle
@@ -207,7 +205,7 @@ class _AuctionDetailsState extends State<AuctionDetails> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(widget.auction.description,
+                              child: Text(widget.ad.description,
                                   style: CupertinoTheme.of(context)
                                       .textTheme
                                       .textStyle),
@@ -239,8 +237,8 @@ class _AuctionDetailsState extends State<AuctionDetails> {
                                 ),
                               ),
                               Text(
-                                  widget.auction.email.substring(
-                                      0, widget.auction.email.indexOf('@')),
+                                  widget.ad.email.substring(
+                                      0, widget.ad.email.indexOf('@')),
                                   style: CupertinoTheme.of(context)
                                       .textTheme
                                       .textStyle
@@ -272,12 +270,12 @@ class _AuctionDetailsState extends State<AuctionDetails> {
                                                         .getCurrentUserEmail()
                                                         .indexOf('@')),
                                             receiverUsername:
-                                                widget.auction.email.substring(
+                                                widget.ad.email.substring(
                                               0,
-                                              widget.auction.email.indexOf('@'),
+                                              widget.ad.email.indexOf('@'),
                                             ),
                                             sender: _auth.getCurrentUserId(),
-                                            receiver: widget.auction.ownerID,
+                                            receiver: widget.ad.ownerID,
                                           ),
                                         ),
                                       ),
@@ -300,7 +298,7 @@ class _AuctionDetailsState extends State<AuctionDetails> {
                                   size: 48,
                                 ),
                               ),
-                              Text(widget.auction.place,
+                              Text(widget.ad.place,
                                   style: CupertinoTheme.of(context)
                                       .textTheme
                                       .textStyle
