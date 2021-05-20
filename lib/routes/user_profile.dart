@@ -2,138 +2,141 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 
-class UserProfile extends StatefulWidget{
+class UserProfile extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _UserProfile();
-
 }
 
-class _UserProfile extends State<UserProfile>{
-
+class _UserProfile extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthenticationService>(context);
+    final _auth = Provider.of<AuthenticationService>(context);
     return CupertinoPageScaffold(
-      backgroundColor: CupertinoColors.white,
+      backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
       child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text('Welcome,\n '+auth.getCurrentUserEmail()+'!',
-            style: TextStyle(
-              fontSize: 23,
-              fontWeight: FontWeight.w500,
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+              child: Container(
+                width: double.infinity,
+                child: Text(
+                  'Welcome,\n' +
+                      _auth.getCurrentUserEmail().substring(
+                          0, _auth.getCurrentUserEmail().indexOf('@')) +
+                      '!',
+                  textAlign: TextAlign.start,
+                  style: CupertinoTheme.of(context)
+                      .textTheme
+                      .navLargeTitleTextStyle,
+                ),
               ),
             ),
-            Text('Your auctions',
-            style: TextStyle(
-              fontSize: 20,
-                fontWeight: FontWeight.bold
+            Text(
+              'Your auctions',
+              style: CupertinoTheme.of(context)
+                  .textTheme
+                  .textStyle
+                  .merge(TextStyle(fontWeight: FontWeight.bold)),
             ),
-            ),
-            CupertinoButton(child:  Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('Active',
-                  style: TextStyle(
-                      color: CupertinoColors.black,
-                  ),
-                ),
-                Icon(CupertinoIcons.arrow_right,color: CupertinoColors.black),
-              ],
-            ), onPressed: (){}),
-
-            CupertinoButton(child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('Completed',
-                  style: TextStyle(
-                      color: CupertinoColors.black
-                  ),
-                ),
-                Icon(CupertinoIcons.arrow_right,color: CupertinoColors.black),
-              ],
-            ), onPressed: (){}),
-
-            Text('Settings and information',
-              style: TextStyle(
-                fontSize: 20,
-                  fontWeight: FontWeight.bold
-              ),
-            ),
-            CupertinoButton(child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('Settings',
-                  style: TextStyle(
-                      color: CupertinoColors.black
-                  ),
-                ),
-                Icon(CupertinoIcons.arrow_right,color: CupertinoColors.black),
-              ],
-            ), onPressed: (){}),
-
-            CupertinoButton(child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('Help',
-                  style: TextStyle(
-                      color: CupertinoColors.black
-                  ),
-                ),
-                Icon(CupertinoIcons.arrow_right,color: CupertinoColors.black),
-              ],
-            ), onPressed: (){}),
-
-            CupertinoButton(child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('Privacy policy',
-                  style: TextStyle(
-                      color: CupertinoColors.black
-                  ),
-                ),
-                Icon(CupertinoIcons.arrow_right,color: CupertinoColors.black),
-              ],
-            ), onPressed: (){}),
-
-            CupertinoButton(child:  Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('About app',
-                  style: TextStyle(
-                  color: CupertinoColors.black
-                  ),
-                ),
-                Icon(CupertinoIcons.arrow_right,color: CupertinoColors.black),
-              ],
-            ),
-                onPressed: (){}
-                ),
             CupertinoButton(
-                child: const Text('Sign out',
-                  style: TextStyle(color: CupertinoColors.black,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.underline),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Active',
+                      style: CupertinoTheme.of(context).textTheme.textStyle,
+                    ),
+                    Icon(CupertinoIcons.arrow_right,
+                        color: CupertinoTheme.of(context).primaryColor),
+                  ],
                 ),
-                onPressed: (){
-                  auth.signOut();
-            })
+                onPressed: () {}),
+            CupertinoButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Completed',
+                      style: CupertinoTheme.of(context).textTheme.textStyle,
+                    ),
+                    Icon(CupertinoIcons.arrow_right,
+                        color: CupertinoTheme.of(context).primaryColor),
+                  ],
+                ),
+                onPressed: () {}),
+            Text(
+              'Settings and information',
+              style: CupertinoTheme.of(context)
+                  .textTheme
+                  .textStyle
+                  .merge(TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            CupertinoButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Settings',
+                      style: CupertinoTheme.of(context).textTheme.textStyle,
+                    ),
+                    Icon(CupertinoIcons.arrow_right,
+                        color: CupertinoTheme.of(context).primaryColor),
+                  ],
+                ),
+                onPressed: () {}),
+            CupertinoButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Help',
+                      style: CupertinoTheme.of(context).textTheme.textStyle,
+                    ),
+                    Icon(CupertinoIcons.arrow_right,
+                        color: CupertinoTheme.of(context).primaryColor),
+                  ],
+                ),
+                onPressed: () {}),
+            CupertinoButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Privacy policy',
+                      style: CupertinoTheme.of(context).textTheme.textStyle,
+                    ),
+                    Icon(CupertinoIcons.arrow_right,
+                        color: CupertinoTheme.of(context).primaryColor),
+                  ],
+                ),
+                onPressed: () {}),
+            CupertinoButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'About app',
+                      style: CupertinoTheme.of(context).textTheme.textStyle,
+                    ),
+                    Icon(CupertinoIcons.arrow_right,
+                        color: CupertinoTheme.of(context).primaryColor),
+                  ],
+                ),
+                onPressed: () {}),
+            CupertinoButton(
+                child: Text(
+                  'Sign out',
+                  style: CupertinoTheme.of(context).textTheme.actionTextStyle,
+                ),
+                onPressed: () {
+                  _auth.signOut();
+                })
           ],
         ),
       ),
     );
-    // final auth = Provider.of<AuthenticationService>(context);
-    // return Container(
-    //     child: CupertinoButton(
-    //       onPressed: () {
-    //         auth.signOut();
-    //       },
-    //       child: const Text(
-    //         'Tutaj bedzie user profile',
-    //         style: TextStyle(color: CupertinoColors.white),
-    //       ),
-    //       color: CupertinoColors.activeBlue,
-    //     ));
   }
 }

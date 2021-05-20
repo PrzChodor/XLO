@@ -18,7 +18,7 @@ class ChatListItem extends StatelessWidget {
           child: Container(
             height: 80,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [

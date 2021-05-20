@@ -1,14 +1,9 @@
-import 'dart:async';
 import 'dart:math';
-import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:xlo_auction_app/model/chat_list_item.dart';
-import 'package:xlo_auction_app/model/chat_message.dart';
-import 'auction_list.dart';
 import 'package:provider/provider.dart';
 import 'chat.dart';
 
