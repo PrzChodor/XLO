@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:xlo_auction_app/model/ad.dart';
@@ -20,7 +22,9 @@ class AdDetails extends StatefulWidget {
 }
 
 class _AdDetailsState extends State<AdDetails> {
+
   final PageController galleryController = PageController();
+
   double currentPage = 0;
   List<String> images;
 
@@ -50,9 +54,11 @@ class _AdDetailsState extends State<AdDetails> {
     });
     super.initState();
   }
+  bool watchlistStatus;
 
   @override
   Widget build(BuildContext context) {
+
     final _auth = context.read<AuthenticationService>();
 
     return CupertinoPageScaffold(
@@ -163,11 +169,18 @@ class _AdDetailsState extends State<AdDetails> {
                                   ),
                                   Spacer(),
                                   CupertinoButton(
-                                      child: Icon(
-                                        CupertinoIcons.heart,
-                                      ),
-                                      onPressed: () => showNotification(
-                                          context, "AdID", widget.ad.adID)),
+                                    child: Icon(
+                                      CupertinoIcons.heart,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        return Icon(CupertinoIcons.heart_fill);
+                                      });
+                                      addAdToWatchlist(context);
+                                      //showNotification(
+                                          //context, "AdID", widget.ad.adID);
+                                    },
+                                  ),
                                 ],
                               ),
                             ),
@@ -259,29 +272,28 @@ class _AdDetailsState extends State<AdDetails> {
                                         size: 32,
                                       ),
                                       onPressed: () {
-                                        if(widget.ad.ownerID!=_auth.getCurrentUserId()) {
+                                        if (widget.ad.ownerID !=
+                                            _auth.getCurrentUserId()) {
                                           Navigator.push(
                                             context,
                                             CupertinoPageRoute(
-                                              builder: (context) =>
-                                                  Chat(
-                                                    senderUsername: _auth
-                                                        .getCurrentUserEmail()
-                                                        .substring(
+                                              builder: (context) => Chat(
+                                                senderUsername: _auth
+                                                    .getCurrentUserEmail()
+                                                    .substring(
                                                         0,
                                                         _auth
                                                             .getCurrentUserEmail()
                                                             .indexOf('@')),
-                                                    receiverUsername:
+                                                receiverUsername:
                                                     widget.ad.email.substring(
-                                                      0,
-                                                      widget.ad.email.indexOf(
-                                                          '@'),
-                                                    ),
-                                                    sender: _auth
-                                                        .getCurrentUserId(),
-                                                    receiver: widget.ad.ownerID,
-                                                  ),
+                                                  0,
+                                                  widget.ad.email.indexOf('@'),
+                                                ),
+                                                sender:
+                                                    _auth.getCurrentUserId(),
+                                                receiver: widget.ad.ownerID,
+                                              ),
                                             ),
                                           );
                                         }
@@ -327,6 +339,25 @@ class _AdDetailsState extends State<AdDetails> {
         }),
       ),
     );
+  }
+
+  Future<void> addAdToWatchlist(BuildContext context) async {
+    final _auth = context.read<AuthenticationService>();
+    final _firestore = context.read<FirebaseFirestore>();
+
+    CollectionReference _watchlist = _firestore.collection('watchlist');
+
+    await _watchlist.doc(_auth.getCurrentUserId()).collection('ad').doc(widget.ad.adID).set({
+      'title': widget.ad.title,
+      'description': widget.ad.description,
+      'ownerID': widget.ad.ownerID,
+      'email': widget.ad.email,
+      'date': widget.ad.dateTime,
+      'archived': widget.ad.archived,
+      'images': widget.ad.images,
+      'price': widget.ad.price,
+      'place': widget.ad.place
+    });
   }
 
   double getIndicatorPosition() {
