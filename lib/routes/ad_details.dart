@@ -8,9 +8,9 @@ import 'package:xlo_auction_app/model/ad.dart';
 import 'package:intl/intl.dart';
 import 'package:xlo_auction_app/routes/chat.dart';
 import 'package:xlo_auction_app/routes/fullscreen_gallery.dart';
-import 'package:xlo_auction_app/widgets/notification.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:provider/provider.dart';
+import 'package:xlo_auction_app/widgets/notification.dart';
 
 class AdDetails extends StatefulWidget {
   final Ad ad;
@@ -169,14 +169,32 @@ class _AdDetailsState extends State<AdDetails> {
                                   ),
                                   Spacer(),
                                   CupertinoButton(
-                                    child: Icon(
-                                      CupertinoIcons.heart,
+                                    child: Builder(
+                                      builder: (context){
+                                        if(widget.ad.bookmarkedBy.contains(_auth.getCurrentUserId())){
+                                          return Icon(CupertinoIcons.heart_fill);
+                                        }
+                                        else{
+                                          return Icon(CupertinoIcons.heart);
+                                        }
+                                      },
                                     ),
                                     onPressed: () {
                                       setState(() {
-                                        return Icon(CupertinoIcons.heart_fill);
+                                        if(widget.ad.bookmarkedBy.contains(_auth.getCurrentUserId())==false) {
+                                          addCurrentUserToWatchlist(context);
+                                          showNotification(context, 'Ad', 'Succesfully added to watchlist');
+                                        }
+                                        else if(widget.ad.bookmarkedBy.contains(_auth.getCurrentUserId())){
+                                          removeCurrentUserToWatchlist(context);
+                                          showNotification(context, 'Ad', 'Succesfully removed from watchlist');
+                                        }
+                                        else{
+                                          showNotification(context, 'Ad', 'An error has occured');
+
+                                        }
+
                                       });
-                                      addAdToWatchlist(context);
                                       //showNotification(
                                           //context, "AdID", widget.ad.adID);
                                     },
@@ -341,24 +359,29 @@ class _AdDetailsState extends State<AdDetails> {
     );
   }
 
-  Future<void> addAdToWatchlist(BuildContext context) async {
+  Future<void> addCurrentUserToWatchlist(BuildContext context) async{
     final _auth = context.read<AuthenticationService>();
     final _firestore = context.read<FirebaseFirestore>();
 
-    CollectionReference _watchlist = _firestore.collection('watchlist');
+    CollectionReference _ads = _firestore.collection('auctions');
 
-    await _watchlist.doc(_auth.getCurrentUserId()).collection('ad').doc(widget.ad.adID).set({
-      'title': widget.ad.title,
-      'description': widget.ad.description,
-      'ownerID': widget.ad.ownerID,
-      'email': widget.ad.email,
-      'date': widget.ad.dateTime,
-      'archived': widget.ad.archived,
-      'images': widget.ad.images,
-      'price': widget.ad.price,
-      'place': widget.ad.place
+    await _ads.doc(widget.ad.adID).update({
+      'bookmarkedBy': FieldValue.arrayUnion([_auth.getCurrentUserId()])
     });
+
   }
+  Future<void> removeCurrentUserToWatchlist(BuildContext context) async{
+    final _auth = context.read<AuthenticationService>();
+    final _firestore = context.read<FirebaseFirestore>();
+
+    CollectionReference _ads = _firestore.collection('auctions');
+
+    await _ads.doc(widget.ad.adID).update({
+      'bookmarkedBy': FieldValue.arrayRemove([_auth.getCurrentUserId()])
+    });
+
+  }
+
 
   double getIndicatorPosition() {
     var center = MediaQuery.of(context).size.width / 2 - 10;
@@ -366,6 +389,7 @@ class _AdDetailsState extends State<AdDetails> {
     return center - startingOffset + 20 * currentPage;
   }
 }
+
 
 class GalleryPage extends StatelessWidget {
   final List<String> images;

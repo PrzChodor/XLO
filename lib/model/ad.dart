@@ -12,6 +12,7 @@ class Ad {
   final String price;
   final String place;
   final bool test;
+  final List<dynamic> bookmarkedBy;
 
   Ad(
       this.adID,
@@ -24,5 +25,7 @@ class Ad {
       this.archived,
       this.price,
       this.place,
-      this.test);
+      this.test,
+      this.bookmarkedBy
+      );
 }

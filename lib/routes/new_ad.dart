@@ -29,6 +29,7 @@ class _NewAd extends State<NewAd> with ScreenLoader<NewAd> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
+  List<String> _bookmarkedBy=<String>[];
   List<Asset> _images = <Asset>[];
   List<String> _imageUrls = <String>[];
 
@@ -125,7 +126,9 @@ class _NewAd extends State<NewAd> with ScreenLoader<NewAd> {
                                             false,
                                             _priceController.text,
                                             _locationController.text,
-                                            true))));
+                                            true,
+                                            _bookmarkedBy
+                                        ))));
                               }
                             }),
                       ),
@@ -252,7 +255,8 @@ class _NewAd extends State<NewAd> with ScreenLoader<NewAd> {
           'archived': false,
           'images': FieldValue.arrayUnion(_imageUrls),
           'price': _priceController.text,
-          'place': _locationController.text.trim()
+          'place': _locationController.text.trim(),
+          'bookmarkedBy':_bookmarkedBy,
         })
         .then((doc) => addToAlgolia(doc).catchError((error, stackTrace) {
               showNotification(

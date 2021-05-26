@@ -196,7 +196,8 @@ class _AdListState extends State<AdList> {
               a['archived'],
               a['price'],
               a['place'],
-              false))
+              false,
+              a['bookmarkedBy']))
           .toList();
       _ads.sort((a, b) => b.dateTime.compareTo(a.dateTime));
     }
