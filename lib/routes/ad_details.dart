@@ -22,7 +22,6 @@ class AdDetails extends StatefulWidget {
 }
 
 class _AdDetailsState extends State<AdDetails> {
-
   final PageController galleryController = PageController();
 
   double currentPage = 0;
@@ -54,11 +53,11 @@ class _AdDetailsState extends State<AdDetails> {
     });
     super.initState();
   }
+
   bool watchlistStatus;
 
   @override
   Widget build(BuildContext context) {
-
     final _auth = context.read<AuthenticationService>();
 
     return CupertinoPageScaffold(
@@ -170,33 +169,98 @@ class _AdDetailsState extends State<AdDetails> {
                                   Spacer(),
                                   CupertinoButton(
                                     child: Builder(
-                                      builder: (context){
-                                        if(widget.ad.bookmarkedBy.contains(_auth.getCurrentUserId())){
-                                          return Icon(CupertinoIcons.heart_fill);
-                                        }
-                                        else{
+                                      builder: (context) {
+                                        if (widget.ad.bookmarkedBy.contains(
+                                            _auth.getCurrentUserId())) {
+                                          return Icon(
+                                              CupertinoIcons.heart_fill);
+                                        } else {
                                           return Icon(CupertinoIcons.heart);
                                         }
                                       },
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        if(widget.ad.bookmarkedBy.contains(_auth.getCurrentUserId())==false) {
+                                    onPressed: () async{
+                                      setState((){
+                                        if (widget.ad.ownerID ==
+                                            _auth.getCurrentUserId()) {
+                                          showCupertinoDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  new CupertinoAlertDialog(
+                                                    content: new Text(
+                                                        'Cannot add own ad to watchlist!'),
+                                                    actions: [
+                                                      CupertinoButton(
+                                                          child: Text('Ok'),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          })
+                                                    ],
+                                                  ));
+                                        } else if (widget.ad.bookmarkedBy
+                                                .contains(
+                                                    _auth.getCurrentUserId()) ==
+                                            false) {
                                           addCurrentUserToWatchlist(context);
-                                          showNotification(context, 'Ad', 'Succesfully added to watchlist');
-                                        }
-                                        else if(widget.ad.bookmarkedBy.contains(_auth.getCurrentUserId())){
+                                          showCupertinoDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                              new CupertinoAlertDialog(
+                                                content: new Text(
+                                                    'Ad succesfully added to watchlist!'),
+                                                actions: [
+                                                  CupertinoButton(
+                                                      child: Text('Ok'),
+                                                      onPressed: () {
+                                                        Navigator.of(
+                                                            context)
+                                                            .pop();
+                                                      })
+                                                ],
+                                              ));
+                                        } else if (widget.ad.bookmarkedBy
+                                            .contains(
+                                                _auth.getCurrentUserId())) {
                                           removeCurrentUserToWatchlist(context);
-                                          showNotification(context, 'Ad', 'Succesfully removed from watchlist');
+                                          showCupertinoDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                              new CupertinoAlertDialog(
+                                                content: new Text(
+                                                    'Ad succesfully removed from watchlist!'),
+                                                actions: [
+                                                  CupertinoButton(
+                                                      child: Text('Ok'),
+                                                      onPressed: () {
+                                                        Navigator.of(
+                                                            context)
+                                                            .pop();
+                                                      })
+                                                ],
+                                              ));
+                                        } else {
+                                          showCupertinoDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                              new CupertinoAlertDialog(
+                                                content: new Text(
+                                                    'An unknown error has occured'),
+                                                actions: [
+                                                  CupertinoButton(
+                                                      child: Text('Ok'),
+                                                      onPressed: () {
+                                                        Navigator.of(
+                                                            context)
+                                                            .pop();
+                                                      })
+                                                ],
+                                              ));
                                         }
-                                        else{
-                                          showNotification(context, 'Ad', 'An error has occured');
-
-                                        }
-
                                       });
                                       //showNotification(
-                                          //context, "AdID", widget.ad.adID);
+                                      //context, "AdID", widget.ad.adID);
                                     },
                                   ),
                                 ],
@@ -359,29 +423,27 @@ class _AdDetailsState extends State<AdDetails> {
     );
   }
 
-  Future<void> addCurrentUserToWatchlist(BuildContext context) async{
+  addCurrentUserToWatchlist(BuildContext context) {
     final _auth = context.read<AuthenticationService>();
     final _firestore = context.read<FirebaseFirestore>();
 
     CollectionReference _ads = _firestore.collection('auctions');
 
-    await _ads.doc(widget.ad.adID).update({
+    _ads.doc(widget.ad.adID).update({
       'bookmarkedBy': FieldValue.arrayUnion([_auth.getCurrentUserId()])
     });
-
   }
-  Future<void> removeCurrentUserToWatchlist(BuildContext context) async{
+
+  removeCurrentUserToWatchlist(BuildContext context){
     final _auth = context.read<AuthenticationService>();
     final _firestore = context.read<FirebaseFirestore>();
 
     CollectionReference _ads = _firestore.collection('auctions');
 
-    await _ads.doc(widget.ad.adID).update({
+    _ads.doc(widget.ad.adID).update({
       'bookmarkedBy': FieldValue.arrayRemove([_auth.getCurrentUserId()])
     });
-
   }
-
 
   double getIndicatorPosition() {
     var center = MediaQuery.of(context).size.width / 2 - 10;
@@ -389,7 +451,6 @@ class _AdDetailsState extends State<AdDetails> {
     return center - startingOffset + 20 * currentPage;
   }
 }
-
 
 class GalleryPage extends StatelessWidget {
   final List<String> images;

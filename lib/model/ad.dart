@@ -15,17 +15,18 @@ class Ad {
   final List<dynamic> bookmarkedBy;
 
   Ad(
-      this.adID,
-      this.ownerID,
-      this.title,
-      this.description,
-      this.images,
-      this.dateTime,
-      this.email,
-      this.archived,
-      this.price,
-      this.place,
-      this.test,
-      this.bookmarkedBy
-      );
+    this.adID,
+    this.ownerID,
+    this.title,
+    this.description,
+    this.images,
+    this.dateTime,
+    this.email,
+    this.archived,
+    this.price,
+    this.place,
+    this.test,
+    this.bookmarkedBy
+  );
+
 }
