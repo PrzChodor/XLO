@@ -167,102 +167,38 @@ class _AdDetailsState extends State<AdDetails> {
                                                 .primaryColor)),
                                   ),
                                   Spacer(),
-                                  CupertinoButton(
-                                    child: Builder(
-                                      builder: (context) {
-                                        if (widget.ad.bookmarkedBy.contains(
-                                            _auth.getCurrentUserId())) {
-                                          return Icon(
-                                              CupertinoIcons.heart_fill);
-                                        } else {
-                                          return Icon(CupertinoIcons.heart);
-                                        }
-                                      },
-                                    ),
-                                    onPressed: () async{
-                                      setState((){
-                                        if (widget.ad.ownerID ==
-                                            _auth.getCurrentUserId()) {
-                                          showCupertinoDialog(
-                                              context: context,
-                                              builder: (_) =>
-                                                  new CupertinoAlertDialog(
-                                                    content: new Text(
-                                                        'Cannot add own ad to watchlist!'),
-                                                    actions: [
-                                                      CupertinoButton(
-                                                          child: Text('Ok'),
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          })
-                                                    ],
-                                                  ));
-                                        } else if (widget.ad.bookmarkedBy
-                                                .contains(
-                                                    _auth.getCurrentUserId()) ==
-                                            false) {
+                                  Builder(builder: (context) {
+                                    if (widget.ad.ownerID ==
+                                        _auth.getCurrentUserId()) {
+                                      return CupertinoButton(
+                                        child: Icon(CupertinoIcons.archivebox),
+                                        onPressed: () {},
+                                      );
+                                    } else if (!widget.ad.bookmarkedBy
+                                        .contains(_auth.getCurrentUserId())) {
+                                      return CupertinoButton(
+                                        child: Icon(CupertinoIcons.heart),
+                                        onPressed: () {
                                           addCurrentUserToWatchlist(context);
-                                          showCupertinoDialog(
-                                              context: context,
-                                              builder: (_) =>
-                                              new CupertinoAlertDialog(
-                                                content: new Text(
-                                                    'Ad succesfully added to watchlist!'),
-                                                actions: [
-                                                  CupertinoButton(
-                                                      child: Text('Ok'),
-                                                      onPressed: () {
-                                                        Navigator.of(
-                                                            context)
-                                                            .pop();
-                                                      })
-                                                ],
-                                              ));
-                                        } else if (widget.ad.bookmarkedBy
-                                            .contains(
-                                                _auth.getCurrentUserId())) {
+                                          setState(() {
+                                            widget.ad.bookmarkedBy
+                                                .add(_auth.getCurrentUserId());
+                                          });
+                                        },
+                                      );
+                                    } else {
+                                      return CupertinoButton(
+                                        child: Icon(CupertinoIcons.heart_fill),
+                                        onPressed: () {
                                           removeCurrentUserToWatchlist(context);
-                                          showCupertinoDialog(
-                                              context: context,
-                                              builder: (_) =>
-                                              new CupertinoAlertDialog(
-                                                content: new Text(
-                                                    'Ad succesfully removed from watchlist!'),
-                                                actions: [
-                                                  CupertinoButton(
-                                                      child: Text('Ok'),
-                                                      onPressed: () {
-                                                        Navigator.of(
-                                                            context)
-                                                            .pop();
-                                                      })
-                                                ],
-                                              ));
-                                        } else {
-                                          showCupertinoDialog(
-                                              context: context,
-                                              builder: (_) =>
-                                              new CupertinoAlertDialog(
-                                                content: new Text(
-                                                    'An unknown error has occured'),
-                                                actions: [
-                                                  CupertinoButton(
-                                                      child: Text('Ok'),
-                                                      onPressed: () {
-                                                        Navigator.of(
-                                                            context)
-                                                            .pop();
-                                                      })
-                                                ],
-                                              ));
-                                        }
-                                      });
-                                      //showNotification(
-                                      //context, "AdID", widget.ad.adID);
-                                    },
-                                  ),
+                                          setState(() {
+                                            widget.ad.bookmarkedBy.remove(
+                                                _auth.getCurrentUserId());
+                                          });
+                                        },
+                                      );
+                                    }
+                                  }),
                                 ],
                               ),
                             ),
@@ -348,39 +284,38 @@ class _AdDetailsState extends State<AdDetails> {
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 16.0),
-                                    child: CupertinoButton(
-                                      child: Icon(
-                                        CupertinoIcons.envelope_fill,
-                                        size: 32,
-                                      ),
-                                      onPressed: () {
-                                        if (widget.ad.ownerID !=
-                                            _auth.getCurrentUserId()) {
-                                          Navigator.push(
-                                            context,
-                                            CupertinoPageRoute(
-                                              builder: (context) => Chat(
-                                                senderUsername: _auth
-                                                    .getCurrentUserEmail()
-                                                    .substring(
-                                                        0,
-                                                        _auth
-                                                            .getCurrentUserEmail()
-                                                            .indexOf('@')),
-                                                receiverUsername:
-                                                    widget.ad.email.substring(
-                                                  0,
-                                                  widget.ad.email.indexOf('@'),
+                                    child: widget.ad.ownerID ==
+                                            _auth.getCurrentUserId()
+                                        ? Container()
+                                        : CupertinoButton(
+                                            child: Icon(
+                                              CupertinoIcons.envelope_fill,
+                                              size: 32,
+                                            ),
+                                            onPressed: () => Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                builder: (context) => Chat(
+                                                  senderUsername: _auth
+                                                      .getCurrentUserEmail()
+                                                      .substring(
+                                                          0,
+                                                          _auth
+                                                              .getCurrentUserEmail()
+                                                              .indexOf('@')),
+                                                  receiverUsername:
+                                                      widget.ad.email.substring(
+                                                    0,
+                                                    widget.ad.email
+                                                        .indexOf('@'),
+                                                  ),
+                                                  sender:
+                                                      _auth.getCurrentUserId(),
+                                                  receiver: widget.ad.ownerID,
                                                 ),
-                                                sender:
-                                                    _auth.getCurrentUserId(),
-                                                receiver: widget.ad.ownerID,
                                               ),
                                             ),
-                                          );
-                                        }
-                                      },
-                                    ),
+                                          ),
                                   ),
                                 ),
                               ),
@@ -434,7 +369,7 @@ class _AdDetailsState extends State<AdDetails> {
     });
   }
 
-  removeCurrentUserToWatchlist(BuildContext context){
+  removeCurrentUserToWatchlist(BuildContext context) {
     final _auth = context.read<AuthenticationService>();
     final _firestore = context.read<FirebaseFirestore>();
 

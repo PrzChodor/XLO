@@ -38,6 +38,7 @@ class ChatListItem extends StatelessWidget {
                   Align(
                     child: Text(
                       message,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           fontSize: 16,
