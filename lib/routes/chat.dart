@@ -36,6 +36,14 @@ class _ChatState extends State<Chat> with TickerProviderStateMixin {
   }
 
   @override
+  void initState() {
+    _inputTextController.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
@@ -180,10 +188,12 @@ class _ChatState extends State<Chat> with TickerProviderStateMixin {
                 Padding(
                   padding: const EdgeInsets.all(2.0),
                   child: CupertinoButton(
-                    onPressed: () {
-                      addMessage(context);
-                      _inputTextController.clear();
-                    },
+                    onPressed: _inputTextController.text.isEmpty
+                        ? null
+                        : () {
+                            addMessage(context);
+                            _inputTextController.clear();
+                          },
                     child: Icon(
                       Icons.send,
                       size: 26,
