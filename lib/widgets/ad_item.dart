@@ -7,10 +7,12 @@ class AdItem extends StatelessWidget {
   final _timeSince;
   final _price;
   final _place;
+  final _id;
 
-  AdItem._(this._image, this._title, this._timeSince, this._price, this._place);
+  AdItem._(this._image, this._title, this._timeSince, this._price, this._place,
+      this._id);
 
-  factory AdItem(image, title, dateTime, price, place) {
+  factory AdItem(image, title, dateTime, price, place, id) {
     var difference = DateTime.now().difference(dateTime);
     String time;
 
@@ -28,31 +30,34 @@ class AdItem extends StatelessWidget {
       time = " ${difference.inSeconds} s";
     }
 
-    return new AdItem._(image, title, time, price, place);
+    return new AdItem._(image, title, time, price, place, id);
   }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Image.network(
-          _image,
-          width: 128,
-          height: 128,
-          fit: BoxFit.cover,
-          loadingBuilder: (BuildContext context, Widget child,
-              ImageChunkEvent loadingProgress) {
-            if (loadingProgress == null) return child;
-            return Center(
-              child: SizedBox(
-                child: CupertinoActivityIndicator(
-                  radius: 32,
+        Hero(
+          tag: _id,
+          child: Image.network(
+            _image,
+            width: 128,
+            height: 128,
+            fit: BoxFit.cover,
+            loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: SizedBox(
+                  child: CupertinoActivityIndicator(
+                    radius: 32,
+                  ),
+                  width: 128,
+                  height: 128,
                 ),
-                width: 128,
-                height: 128,
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
         Expanded(
           child: Container(
