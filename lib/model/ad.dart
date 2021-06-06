@@ -8,7 +8,7 @@ class Ad {
   final List<dynamic> images;
   final Timestamp dateTime;
   final String email;
-  final bool archived;
+  bool archived;
   final String price;
   final String place;
   final bool test;

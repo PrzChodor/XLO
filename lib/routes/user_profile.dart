@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
+import 'package:xlo_auction_app/routes/ads_active.dart';
+import 'package:xlo_auction_app/routes/ads_archived.dart';
 
 class UserProfile extends StatefulWidget {
   @override
@@ -53,20 +55,28 @@ class _UserProfile extends State<UserProfile> {
                         color: CupertinoTheme.of(context).primaryColor),
                   ],
                 ),
-                onPressed: () {}),
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  Navigator.of(context, rootNavigator: true).push(
+                      CupertinoPageRoute(builder: (context) => AdsActive()));
+                }),
             CupertinoButton(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      'Completed',
+                      'Archived',
                       style: CupertinoTheme.of(context).textTheme.textStyle,
                     ),
                     Icon(CupertinoIcons.arrow_right,
                         color: CupertinoTheme.of(context).primaryColor),
                   ],
                 ),
-                onPressed: () {}),
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  Navigator.of(context, rootNavigator: true).push(
+                      CupertinoPageRoute(builder: (context) => AdsArchived()));
+                }),
             Text(
               'Settings and information',
               style: CupertinoTheme.of(context)

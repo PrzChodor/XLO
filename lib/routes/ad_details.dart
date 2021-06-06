@@ -170,10 +170,86 @@ class _AdDetailsState extends State<AdDetails> {
                                   Builder(builder: (context) {
                                     if (widget.ad.ownerID ==
                                         _auth.getCurrentUserId()) {
-                                      return CupertinoButton(
-                                        child: Icon(CupertinoIcons.archivebox),
-                                        onPressed: () {},
-                                      );
+                                      if (widget.ad.archived == false) {
+                                        return CupertinoButton(
+                                          child:
+                                              Icon(CupertinoIcons.archivebox),
+                                          onPressed: () {
+                                            showCupertinoDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    new CupertinoAlertDialog(
+                                                        title: new Text(
+                                                            'Are you sure you want to archive this advertisement?'),
+                                                        actions: <Widget>[
+                                                          CupertinoDialogAction(
+                                                            isDefaultAction:
+                                                                true,
+                                                            child: Text("Yes"),
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                addCurrentToArchive(
+                                                                    context);
+                                                                widget.ad
+                                                                        .archived =
+                                                                    true;
+
+                                                              });
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop(true);
+                                                            },
+                                                          ),
+                                                          CupertinoDialogAction(
+                                                            child: Text("No"),
+                                                            onPressed: () =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(true),
+                                                          )
+                                                        ]));
+                                          },
+                                        );
+                                      } else {
+                                        return CupertinoButton(
+                                          child: Icon(
+                                              CupertinoIcons.archivebox_fill),
+                                          onPressed: () {
+                                            showCupertinoDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    new CupertinoAlertDialog(
+                                                        title: new Text(
+                                                            'Are you sure you want to unarchive this advertisement?'),
+                                                        actions: <Widget>[
+                                                          CupertinoDialogAction(
+                                                            isDefaultAction:
+                                                                true,
+                                                            child: Text("Yes"),
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                removeCurrentFromArchive(
+                                                                    context);
+                                                                widget.ad
+                                                                        .archived =
+                                                                    false;
+                                                              });
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop(true);
+                                                            },
+                                                          ),
+                                                          CupertinoDialogAction(
+                                                            child: Text("No"),
+                                                            onPressed: () =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(true),
+                                                          )
+                                                        ]));
+                                          },
+                                        );
+                                      }
                                     } else if (!widget.ad.bookmarkedBy
                                         .contains(_auth.getCurrentUserId())) {
                                       return CupertinoButton(
@@ -289,7 +365,7 @@ class _AdDetailsState extends State<AdDetails> {
                                         ? Container()
                                         : CupertinoButton(
                                             child: Icon(
-                                              CupertinoIcons.envelope_fill,
+                                              CupertinoIcons.chat_bubble_2_fill,
                                               size: 32,
                                             ),
                                             onPressed: () => Navigator.push(
@@ -356,6 +432,22 @@ class _AdDetailsState extends State<AdDetails> {
         }),
       ),
     );
+  }
+
+  addCurrentToArchive(BuildContext context) {
+    final _firestore = context.read<FirebaseFirestore>();
+
+    CollectionReference _ads = _firestore.collection('auctions');
+    _ads.doc(widget.ad.adID).update({'archived': true, 'date': DateTime.now()});
+  }
+
+  removeCurrentFromArchive(BuildContext context) {
+    final _firestore = context.read<FirebaseFirestore>();
+
+    CollectionReference _ads = _firestore.collection('auctions');
+    _ads
+        .doc(widget.ad.adID)
+        .update({'archived': false, 'date': DateTime.now()});
   }
 
   addCurrentUserToWatchlist(BuildContext context) {
