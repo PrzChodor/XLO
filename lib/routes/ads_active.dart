@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:xlo_auction_app/model/ad.dart';
 import 'package:xlo_auction_app/routes/ad_details.dart';
-import 'package:xlo_auction_app/routes/user_profile.dart';
 import 'package:xlo_auction_app/widgets/ad_item.dart';
 
 class AdsActive extends StatefulWidget {

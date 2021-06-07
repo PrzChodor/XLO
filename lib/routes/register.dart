@@ -57,7 +57,6 @@ class _RegisterState extends State<Register> {
                           height: 200,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: CupertinoTheme.of(context).primaryColor,
                           ),
                           child: _currentImage != null
                               ? Image.file(
@@ -67,10 +66,10 @@ class _RegisterState extends State<Register> {
                                   fit: BoxFit.cover,
                                 )
                               : Icon(
-                                  CupertinoIcons.person_alt,
-                                  size: 180,
-                                  color: CupertinoTheme.of(context)
-                                      .barBackgroundColor,
+                                  CupertinoIcons.person_circle_fill,
+                                  size: 200,
+                                  color:
+                                      CupertinoTheme.of(context).primaryColor,
                                 ),
                         ),
                       ),

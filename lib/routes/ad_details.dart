@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,6 @@ import 'package:xlo_auction_app/routes/chat.dart';
 import 'package:xlo_auction_app/routes/fullscreen_gallery.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:provider/provider.dart';
-import 'package:xlo_auction_app/widgets/notification.dart';
 
 class AdDetails extends StatefulWidget {
   final Ad ad;
@@ -444,16 +444,38 @@ class _AdDetailsState extends State<AdDetails> {
     );
   }
 
-  addCurrentToArchive(BuildContext context) {
-    final _firestore = context.read<FirebaseFirestore>();
+  addCurrentToArchive(BuildContext context) async {
+    Algolia algolia = Algolia.init(
+      applicationId: 'ZYVN1G1S7E',
+      apiKey: '074c9f69d125d3d81260e64fb5424ace',
+    );
+    AlgoliaIndexReference index = algolia.instance.index('ads');
+    index.addObject({
+      'objectID': widget.ad.adID,
+      'title': widget.ad.title,
+      'archived': true,
+      'date': DateTime.now()
+    });
 
+    final _firestore = context.read<FirebaseFirestore>();
     CollectionReference _ads = _firestore.collection('ads');
     _ads.doc(widget.ad.adID).update({'archived': true, 'date': DateTime.now()});
   }
 
-  removeCurrentFromArchive(BuildContext context) {
-    final _firestore = context.read<FirebaseFirestore>();
+  removeCurrentFromArchive(BuildContext context) async {
+    Algolia algolia = Algolia.init(
+      applicationId: 'ZYVN1G1S7E',
+      apiKey: '074c9f69d125d3d81260e64fb5424ace',
+    );
+    AlgoliaIndexReference index = algolia.instance.index('ads');
+    index.addObject({
+      'objectID': widget.ad.adID,
+      'title': widget.ad.title,
+      'archived': false,
+      'date': DateTime.now()
+    });
 
+    final _firestore = context.read<FirebaseFirestore>();
     CollectionReference _ads = _firestore.collection('ads');
     _ads
         .doc(widget.ad.adID)
