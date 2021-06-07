@@ -19,6 +19,7 @@ class _RegisterState extends State<Register> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   File _currentImage;
+  var _isPasswordHidden = true;
 
   @override
   void dispose() {
@@ -102,9 +103,25 @@ class _RegisterState extends State<Register> {
                       child: ConstrainedBox(
                         constraints: BoxConstraints(maxWidth: 300),
                         child: CupertinoTextField(
-                          controller: _passwordController,
                           placeholder: 'Password',
-                          obscureText: true,
+                          controller: _passwordController,
+                          obscureText: _isPasswordHidden,
+                          suffix: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: GestureDetector(
+                              child: Icon(
+                                _isPasswordHidden
+                                    ? CupertinoIcons.eye
+                                    : CupertinoIcons.eye_slash,
+                                size: 20.0,
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  _isPasswordHidden = !_isPasswordHidden;
+                                });
+                              },
+                            ),
+                          ),
                         ),
                       ),
                     ),

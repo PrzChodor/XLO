@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -130,6 +129,25 @@ class AuthenticationService {
       return await _storage.ref('$uid/profile_photo').getDownloadURL();
     } catch (_) {
       return '';
+    }
+  }
+
+  AuthCredential getCredentialForCurrentUser(String password) {
+    final user = _authenticator.currentUser;
+    return EmailAuthProvider.credential(email: user.email, password: password);
+  }
+
+  Future<void> reauthenticateWithRefreshedCredentials(
+      AuthCredential credential) async {
+    final user = _authenticator.currentUser;
+    await user.reauthenticateWithCredential(credential);
+  }
+
+  Future<void> deleteUser() async {
+    try {
+      await _authenticator.currentUser.delete();
+    } catch (e) {
+      print('User must reauthenticate before deleting account');
     }
   }
 }

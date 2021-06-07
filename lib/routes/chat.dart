@@ -233,20 +233,10 @@ class _ChatState extends State<Chat> with TickerProviderStateMixin {
       'date': DateTime.now(),
     });
 
-    DocumentReference _senderChatDocument = _firestore
-        .collection('user')
-        .doc(widget.sender)
-        .collection('chats')
-        .doc(widget.receiver)
-        .collection('messages')
-        .doc();
-    DocumentReference _receiverChatDocument = _firestore
-        .collection('user')
-        .doc(widget.receiver)
-        .collection('chats')
-        .doc(widget.sender)
-        .collection('messages')
-        .doc();
+    DocumentReference _senderChatDocument =
+        _senderChats.collection('messages').doc();
+    DocumentReference _receiverChatDocument =
+        _receiverChats.collection('messages').doc();
 
     var batch = _firestore.batch();
     batch.set(_senderChatDocument, {
