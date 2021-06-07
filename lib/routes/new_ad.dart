@@ -29,7 +29,7 @@ class _NewAd extends State<NewAd> with ScreenLoader<NewAd> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
-  List<String> _bookmarkedBy=<String>[];
+  List<String> _bookmarkedBy = <String>[];
   List<Asset> _images = <Asset>[];
   List<String> _imageUrls = <String>[];
 
@@ -122,13 +122,12 @@ class _NewAd extends State<NewAd> with ScreenLoader<NewAd> {
                                             Timestamp.fromDate(DateTime.now()),
                                             context
                                                 .read<AuthenticationService>()
-                                                .getCurrentUserEmail(),
+                                                .getCurrentUsername(),
                                             false,
                                             _priceController.text,
                                             _locationController.text,
                                             true,
-                                            _bookmarkedBy
-                                        ))));
+                                            _bookmarkedBy))));
                               }
                             }),
                       ),
@@ -243,20 +242,20 @@ class _NewAd extends State<NewAd> with ScreenLoader<NewAd> {
 
     await uploadImages(context);
 
-    CollectionReference _ads = _firestore.collection('auctions');
+    CollectionReference _ads = _firestore.collection('ads');
 
     await _ads
         .add({
           'title': _titleController.text.trim(),
           'description': _descriptionController.text.trim(),
           'ownerID': _auth.getCurrentUserId(),
-          'email': _auth.getCurrentUserEmail(),
+          'username': _auth.getCurrentUsername(),
           'date': DateTime.now(),
           'archived': false,
           'images': FieldValue.arrayUnion(_imageUrls),
           'price': _priceController.text,
           'place': _locationController.text.trim(),
-          'bookmarkedBy':_bookmarkedBy,
+          'bookmarkedBy': _bookmarkedBy,
         })
         .then((doc) => addToAlgolia(doc).catchError((error, stackTrace) {
               showNotification(
@@ -270,11 +269,11 @@ class _NewAd extends State<NewAd> with ScreenLoader<NewAd> {
 
   Future<void> addToAlgolia(DocumentReference doc) async {
     Algolia algolia = Algolia.init(
-      applicationId: 'NLFY2U8IFV',
-      apiKey: '1418a0c042a56d3171523522ad666b93',
+      applicationId: 'ZYVN1G1S7E',
+      apiKey: '074c9f69d125d3d81260e64fb5424ace',
     );
 
-    AlgoliaIndexReference index = algolia.instance.index('auctions');
+    AlgoliaIndexReference index = algolia.instance.index('ads');
     await index.addObject({
       'objectID': doc.id,
       'title': _titleController.text.trim(),
@@ -329,7 +328,7 @@ class _NewAd extends State<NewAd> with ScreenLoader<NewAd> {
       return false;
     }
     if (_images.isEmpty) {
-      showNotification(context, "Error", "Select atleast one image!");
+      showNotification(context, "Error", "Select at least one image!");
       return false;
     }
     return true;

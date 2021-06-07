@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:uuid/uuid.dart';
 import 'package:xlo_auction_app/widgets/notification.dart';
 
 class AuthenticationService {
   final FirebaseAuth _authenticator = FirebaseAuth.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  var uuid = Uuid();
 
   // singleton
   static final AuthenticationService _authenticationService =
@@ -17,11 +23,26 @@ class AuthenticationService {
   Stream<User> get authStateChanges => _authenticator.authStateChanges();
   bool get isEmailVerified => _authenticator.currentUser.emailVerified;
 
-  Future<void> createUserWithEmail(
-      BuildContext context, String email, String password) async {
+  Future<void> createUserWithEmail(BuildContext context, String email,
+      String password, String username, File imageFile) async {
     await _authenticator.createUserWithEmailAndPassword(
         email: email, password: password);
 
+    _authenticator.currentUser?.updateDisplayName(username);
+
+    if (imageFile != null) {
+      final loggedUser = getCurrentUserId();
+      final taskSnapshot = await _storage
+          .ref('$loggedUser/profile_photo')
+          .putFile(imageFile)
+          .catchError((error, stackTrace) {
+        showNotification(context, 'Error', "Failed to upload image!\n$error");
+      });
+      final imageUrl = await taskSnapshot.ref.getDownloadURL();
+      await _authenticator.currentUser?.updatePhotoURL(imageUrl);
+    }
+
+    Navigator.pop(context);
     if (!_authenticator.currentUser.emailVerified) {
       _authenticator.currentUser.sendEmailVerification();
       showNotification(
@@ -96,7 +117,19 @@ class AuthenticationService {
     return _authenticator.currentUser.uid;
   }
 
-  String getCurrentUserEmail() {
-    return _authenticator.currentUser.email;
+  String getCurrentUsername() {
+    return _authenticator.currentUser.displayName;
+  }
+
+  String getCurrentUserPhoto() {
+    return _authenticator.currentUser.photoURL;
+  }
+
+  Future<String> getUserPhoto(String uid) async {
+    try {
+      return await _storage.ref('$uid/profile_photo').getDownloadURL();
+    } catch (_) {
+      return '';
+    }
   }
 }

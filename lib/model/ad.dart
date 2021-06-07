@@ -7,7 +7,7 @@ class Ad {
   final String description;
   final List<dynamic> images;
   final Timestamp dateTime;
-  final String email;
+  final String username;
   bool archived;
   final String price;
   final String place;
@@ -15,18 +15,16 @@ class Ad {
   final List<dynamic> bookmarkedBy;
 
   Ad(
-    this.adID,
-    this.ownerID,
-    this.title,
-    this.description,
-    this.images,
-    this.dateTime,
-    this.email,
-    this.archived,
-    this.price,
-    this.place,
-    this.test,
-    this.bookmarkedBy
-  );
-
+      this.adID,
+      this.ownerID,
+      this.title,
+      this.description,
+      this.images,
+      this.dateTime,
+      this.username,
+      this.archived,
+      this.price,
+      this.place,
+      this.test,
+      this.bookmarkedBy);
 }

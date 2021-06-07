@@ -71,8 +71,7 @@ class _ChatListState extends State<ChatList> {
                       context,
                       CupertinoPageRoute(
                         builder: (context) => Chat(
-                          senderUsername: _auth.getCurrentUserEmail().substring(
-                              0, _auth.getCurrentUserEmail().indexOf('@')),
+                          senderUsername: _auth.getCurrentUsername(),
                           receiverUsername: chats[index].username,
                           sender: _auth.getCurrentUserId(),
                           receiver: chats[index].chatID,

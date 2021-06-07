@@ -25,10 +25,7 @@ class _UserProfile extends State<UserProfile> {
               child: Container(
                 width: double.infinity,
                 child: Text(
-                  'Welcome,\n' +
-                      _auth.getCurrentUserEmail().substring(
-                          0, _auth.getCurrentUserEmail().indexOf('@')) +
-                      '!',
+                  'Welcome,\n${_auth.getCurrentUsername()}!',
                   textAlign: TextAlign.start,
                   style: CupertinoTheme.of(context)
                       .textTheme

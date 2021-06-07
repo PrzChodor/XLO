@@ -23,7 +23,8 @@ class AdDetails extends StatefulWidget {
 
 class _AdDetailsState extends State<AdDetails> {
   final PageController galleryController = PageController();
-
+  final _auth = AuthenticationService();
+  String profilePictureUrl = '';
   double currentPage = 0;
   List<String> images;
 
@@ -51,6 +52,11 @@ class _AdDetailsState extends State<AdDetails> {
         currentPage = galleryController.page;
       });
     });
+    _auth.getUserPhoto(widget.ad.ownerID).then((value) {
+      setState(() {
+        profilePictureUrl = value;
+      });
+    });
     super.initState();
   }
 
@@ -58,8 +64,6 @@ class _AdDetailsState extends State<AdDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final _auth = context.read<AuthenticationService>();
-
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text('Advertisement details'),
@@ -193,7 +197,6 @@ class _AdDetailsState extends State<AdDetails> {
                                                                 widget.ad
                                                                         .archived =
                                                                     true;
-
                                                               });
                                                               Navigator.of(
                                                                       context)
@@ -338,14 +341,27 @@ class _AdDetailsState extends State<AdDetails> {
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16.0, vertical: 8.0),
-                                child: Icon(
-                                  CupertinoIcons.person_crop_circle,
-                                  size: 48,
+                                child: Container(
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  width: 48,
+                                  height: 48,
+                                  child: profilePictureUrl.isNotEmpty
+                                      ? Image.network(
+                                          profilePictureUrl,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Icon(
+                                          CupertinoIcons.person_circle_fill,
+                                          color: CupertinoTheme.of(context)
+                                              .primaryColor,
+                                          size: 48,
+                                        ),
                                 ),
                               ),
-                              Text(
-                                  widget.ad.email.substring(
-                                      0, widget.ad.email.indexOf('@')),
+                              Text(widget.ad.username,
                                   style: CupertinoTheme.of(context)
                                       .textTheme
                                       .textStyle
@@ -373,18 +389,9 @@ class _AdDetailsState extends State<AdDetails> {
                                               CupertinoPageRoute(
                                                 builder: (context) => Chat(
                                                   senderUsername: _auth
-                                                      .getCurrentUserEmail()
-                                                      .substring(
-                                                          0,
-                                                          _auth
-                                                              .getCurrentUserEmail()
-                                                              .indexOf('@')),
+                                                      .getCurrentUsername(),
                                                   receiverUsername:
-                                                      widget.ad.email.substring(
-                                                    0,
-                                                    widget.ad.email
-                                                        .indexOf('@'),
-                                                  ),
+                                                      widget.ad.username,
                                                   sender:
                                                       _auth.getCurrentUserId(),
                                                   receiver: widget.ad.ownerID,
@@ -437,14 +444,14 @@ class _AdDetailsState extends State<AdDetails> {
   addCurrentToArchive(BuildContext context) {
     final _firestore = context.read<FirebaseFirestore>();
 
-    CollectionReference _ads = _firestore.collection('auctions');
+    CollectionReference _ads = _firestore.collection('ads');
     _ads.doc(widget.ad.adID).update({'archived': true, 'date': DateTime.now()});
   }
 
   removeCurrentFromArchive(BuildContext context) {
     final _firestore = context.read<FirebaseFirestore>();
 
-    CollectionReference _ads = _firestore.collection('auctions');
+    CollectionReference _ads = _firestore.collection('ads');
     _ads
         .doc(widget.ad.adID)
         .update({'archived': false, 'date': DateTime.now()});
@@ -454,7 +461,7 @@ class _AdDetailsState extends State<AdDetails> {
     final _auth = context.read<AuthenticationService>();
     final _firestore = context.read<FirebaseFirestore>();
 
-    CollectionReference _ads = _firestore.collection('auctions');
+    CollectionReference _ads = _firestore.collection('ads');
 
     _ads.doc(widget.ad.adID).update({
       'bookmarkedBy': FieldValue.arrayUnion([_auth.getCurrentUserId()])
@@ -465,7 +472,7 @@ class _AdDetailsState extends State<AdDetails> {
     final _auth = context.read<AuthenticationService>();
     final _firestore = context.read<FirebaseFirestore>();
 
-    CollectionReference _ads = _firestore.collection('auctions');
+    CollectionReference _ads = _firestore.collection('ads');
 
     _ads.doc(widget.ad.adID).update({
       'bookmarkedBy': FieldValue.arrayRemove([_auth.getCurrentUserId()])

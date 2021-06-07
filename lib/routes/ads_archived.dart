@@ -34,7 +34,7 @@ class _AdsArchivedState extends State<AdsArchived> {
         child: SafeArea(
           child: StreamBuilder(
               stream: FirebaseFirestore.instance
-                  .collection('auctions')
+                  .collection('ads')
                   .where('ownerID', isEqualTo: _auth.getCurrentUserId())
                   .where('archived', isEqualTo: true)
                   .snapshots(),
@@ -55,7 +55,7 @@ class _AdsArchivedState extends State<AdsArchived> {
                         a['description'],
                         a['images'],
                         a['date'],
-                        a['email'],
+                        a['username'],
                         a['archived'],
                         a['price'],
                         a['place'],

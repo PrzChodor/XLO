@@ -201,12 +201,12 @@ class _AdListState extends State<AdList> {
     }
 
     Algolia algolia = Algolia.init(
-      applicationId: 'NLFY2U8IFV',
-      apiKey: '4a04acd1a08d627e779699706005df55',
+      applicationId: 'ZYVN1G1S7E',
+      apiKey: '84cebf227a528f3b882a1639904d5e34',
     );
     _currentPage = 0;
 
-    AlgoliaQuery query = algolia.instance.index('auctions');
+    AlgoliaQuery query = algolia.instance.index('ads');
     query = query
         .query(_searchController.text)
         .filters('archived:false')
@@ -221,7 +221,7 @@ class _AdListState extends State<AdList> {
 
     if (results.isNotEmpty) {
       var docs = await FirebaseFirestore.instance
-          .collection('auctions')
+          .collection('ads')
           .where('__name__', whereIn: results)
           .get()
           .then((snapshot) => snapshot.docs);
@@ -235,7 +235,7 @@ class _AdListState extends State<AdList> {
               a['description'],
               a['images'],
               a['date'],
-              a['email'],
+              a['username'],
               a['archived'],
               a['price'],
               a['place'],
@@ -263,11 +263,11 @@ class _AdListState extends State<AdList> {
     });
 
     Algolia algolia = Algolia.init(
-      applicationId: 'NLFY2U8IFV',
-      apiKey: '4a04acd1a08d627e779699706005df55',
+      applicationId: 'ZYVN1G1S7E',
+      apiKey: '84cebf227a528f3b882a1639904d5e34',
     );
 
-    AlgoliaQuery query = algolia.instance.index('auctions');
+    AlgoliaQuery query = algolia.instance.index('ads');
     query = query
         .query(_searchController.text)
         .filters('archived:false')
@@ -282,7 +282,7 @@ class _AdListState extends State<AdList> {
 
     if (results.isNotEmpty) {
       var docs = await FirebaseFirestore.instance
-          .collection('auctions')
+          .collection('ads')
           .where('__name__', whereIn: results)
           .get()
           .then((snapshot) => snapshot.docs);
@@ -296,7 +296,7 @@ class _AdListState extends State<AdList> {
               a['description'],
               a['images'],
               a['date'],
-              a['email'],
+              a['username'],
               a['archived'],
               a['price'],
               a['place'],

@@ -30,7 +30,7 @@ class _WatchlistState extends State<Watchlist> {
             child: SafeArea(
           child: StreamBuilder(
               stream: FirebaseFirestore.instance
-                  .collection('auctions')
+                  .collection('ads')
                   .where('bookmarkedBy',
                       arrayContains: AuthenticationService().getCurrentUserId())
                   .snapshots(),
@@ -51,7 +51,7 @@ class _WatchlistState extends State<Watchlist> {
                         a['description'],
                         a['images'],
                         a['date'],
-                        a['email'],
+                        a['username'],
                         a['archived'],
                         a['price'],
                         a['place'],
