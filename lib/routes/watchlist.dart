@@ -86,7 +86,8 @@ class _WatchlistState extends State<Watchlist> {
                                       _ads[index].title,
                                       _ads[index].dateTime.toDate(),
                                       _ads[index].price,
-                                      _ads[index].place),
+                                      _ads[index].place,
+                                      _ads[index].adID),
                                   onTap: () {
                                     FocusScope.of(context).unfocus();
                                     Navigator.of(context, rootNavigator: true)

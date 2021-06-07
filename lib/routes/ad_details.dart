@@ -81,20 +81,23 @@ class _AdDetailsState extends State<AdDetails> {
                   Stack(
                     alignment: Alignment(0, 0.8),
                     children: [
-                      Container(
-                        width: double.infinity,
-                        height: 256,
-                        child: PageView(
-                          controller: galleryController,
-                          physics: ClampingScrollPhysics(),
-                          children: [
-                            for (var i = 0; i < images.length; i++)
-                              GalleryPage(
-                                images: images,
-                                index: i,
-                                test: widget.ad.test,
-                              )
-                          ],
+                      Hero(
+                        tag: widget.ad.adID,
+                        child: Container(
+                          width: double.infinity,
+                          height: 256,
+                          child: PageView(
+                            controller: galleryController,
+                            physics: ClampingScrollPhysics(),
+                            children: [
+                              for (var i = 0; i < images.length; i++)
+                                GalleryPage(
+                                  images: images,
+                                  index: i,
+                                  test: widget.ad.test,
+                                )
+                            ],
+                          ),
                         ),
                       ),
                       Row(
