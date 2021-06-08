@@ -8,6 +8,7 @@ import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:xlo_auction_app/model/ad.dart';
 import 'package:intl/intl.dart';
 import 'package:xlo_auction_app/routes/chat.dart';
+import 'package:xlo_auction_app/routes/edit_ad.dart';
 import 'package:xlo_auction_app/routes/fullscreen_gallery.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ class _AdDetailsState extends State<AdDetails> {
   String profilePictureUrl = '';
   double currentPage = 0;
   List<String> images;
+
 
   @override
   void dispose() {
@@ -285,6 +287,23 @@ class _AdDetailsState extends State<AdDetails> {
                                       );
                                     }
                                   }),
+                                  Builder(builder: (context) {
+                                    if (widget.ad.ownerID ==
+                                        _auth.getCurrentUserId()) {
+                                      return CupertinoButton(
+                                        child: Icon(CupertinoIcons.gear_alt),
+                                        onPressed: () {
+                                          FocusScope.of(context).unfocus();
+                                          Navigator.of(context).push(
+                                              CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      EditAd()));
+                                        },
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
+                                  }),
                                 ],
                               ),
                             ),
@@ -415,15 +434,20 @@ class _AdDetailsState extends State<AdDetails> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(1.0),
                           child: Row(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 8.0),
-                                child: Icon(
-                                  CupertinoIcons.map_fill,
-                                  size: 48,
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: CupertinoButton(
+                                  child: Icon(
+                                    CupertinoIcons.map_fill,
+                                    size: 48,
+                                    color:
+                                        CupertinoTheme.of(context).primaryColor,
+                                  ),
+                                  onPressed: () async{
+                                  },
                                 ),
                               ),
                               Text(widget.ad.place,
