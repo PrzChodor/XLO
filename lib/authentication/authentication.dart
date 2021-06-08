@@ -124,6 +124,10 @@ class AuthenticationService {
     return _authenticator.currentUser.photoURL;
   }
 
+  String getCurrentUserEmail() {
+    return _authenticator.currentUser.email;
+  }
+
   Future<String> getUserPhoto(String uid) async {
     try {
       return await _storage.ref('$uid/profile_photo').getDownloadURL();

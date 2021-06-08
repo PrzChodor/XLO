@@ -59,7 +59,8 @@ class _UserProfile extends State<UserProfile> with ScreenLoader<UserProfile> {
                           width: 96,
                           height: 96,
                           child: GestureDetector(
-                              child: _auth.getCurrentUserPhoto()!=null
+
+                              child: _auth.getCurrentUserPhoto() != null
                                   ? Image.network(
                                       _auth.getCurrentUserPhoto(),
                                       fit: BoxFit.cover,

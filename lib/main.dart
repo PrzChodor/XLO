@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:xlo_auction_app/routes/email_verification.dart';
 import 'package:xlo_auction_app/routes/register.dart';
 import 'package:xlo_auction_app/routes/signIn.dart';
 import 'package:xlo_auction_app/routes/home.dart';
@@ -117,7 +118,7 @@ class AuthenticationWrapper extends StatelessWidget {
     final firebaseUser = context.watch<User>();
 
     if (firebaseUser != null) {
-      return HomePage();
+      return EmailVerification();
     }
     return SignIn();
   }
