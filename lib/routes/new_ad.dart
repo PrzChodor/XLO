@@ -192,11 +192,12 @@ class _NewAd extends State<NewAd> with ScreenLoader<NewAd> {
   }
 
   Widget buildGridView() {
-    return GridView.count(
+    return GridView.extent(
         primary: false,
         shrinkWrap: true,
-        crossAxisCount: 3,
+        maxCrossAxisExtent: 150,
         crossAxisSpacing: 8.0,
+        mainAxisSpacing: 8.0,
         children: List.generate(_images.length + 1, (index) {
           if (index < _images.length) {
             Asset asset = _images[index];
