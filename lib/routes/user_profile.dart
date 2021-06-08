@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:xlo_auction_app/routes/ads_active.dart';
 import 'package:xlo_auction_app/routes/ads_archived.dart';
+
+import 'package:xlo_auction_app/widgets/changePasswordPopup.dart';
 import 'package:xlo_auction_app/widgets/deletionConfirmPopup.dart';
 
 class UserProfile extends StatefulWidget {
@@ -88,6 +90,20 @@ class _UserProfile extends State<UserProfile> {
                   style: CupertinoTheme.of(context).textTheme.textStyle.merge(
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
                 ),
+                CupertinoButton(child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Change password',
+                      style: CupertinoTheme.of(context).textTheme.textStyle,
+                    ),
+                    Icon(CupertinoIcons.arrow_right,
+                        color: CupertinoTheme.of(context).primaryColor),
+                  ],
+                ),
+                    onPressed: () {
+                      changePassword(context);
+                    }),
                 CupertinoButton(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -122,5 +138,8 @@ class _UserProfile extends State<UserProfile> {
 
   Future<void> deleteChats(BuildContext context) async {
     showPasswordPopup(context);
+  }
+  Future<void> changePassword(BuildContext context) async {
+    changePasswordPopup(context);
   }
 }
