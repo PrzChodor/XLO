@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 
 class CustomTheme {
+  static Brightness currentBrightness = Brightness.light;
+  static Function changeBrightness;
+  static bool autoBrightness = true;
   static CupertinoThemeData get customTheme {
     return CupertinoThemeData(
       primaryColor: const CupertinoDynamicColor.withBrightness(

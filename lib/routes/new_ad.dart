@@ -257,7 +257,8 @@ class _NewAd extends State<NewAd> with ScreenLoader<NewAd> {
           'place': _locationController.text.trim(),
           'bookmarkedBy': _bookmarkedBy,
         })
-        .then((doc) => addToAlgolia(doc).catchError((error, stackTrace) {
+        .then((doc) async =>
+            await addToAlgolia(doc).catchError((error, stackTrace) {
               showNotification(
                   context, 'Error', "Failed to add advertisement!");
               _ads.doc(doc.id).delete();
