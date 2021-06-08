@@ -97,9 +97,8 @@ class _ChatListItemState extends State<ChatListItem> {
                     padding: const EdgeInsets.only(top: 4.0),
                     child: SizedBox(
                       width: double.infinity,
-                      height: 32,
                       child: Text(
-                        widget.message,
+                        widget.message + '\n',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: CupertinoTheme.of(context)

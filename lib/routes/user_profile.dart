@@ -242,30 +242,35 @@ class _UserProfile extends State<UserProfile> with ScreenLoader<UserProfile> {
                       Divider(
                         height: 1,
                       ),
-                      CupertinoButton(
-                        child: Row(
-                          children: [
-                            Icon(
-                              CupertinoIcons.lock,
-                              color: CupertinoColors.destructiveRed,
-                            ),
-                            SizedBox(
-                              width: 16,
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Change password',
-                                style: TextStyle(
-                                    color: CupertinoColors.destructiveRed),
+                      AuthenticationService().isCurrentProviderByEmail()
+                          ? CupertinoButton(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    CupertinoIcons.lock,
+                                    color: CupertinoColors.destructiveRed,
+                                  ),
+                                  SizedBox(
+                                    width: 16,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      'Change password',
+                                      style: TextStyle(
+                                          color:
+                                              CupertinoColors.destructiveRed),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                        onPressed: () => changePassword(context),
-                      ),
-                      Divider(
-                        height: 1,
-                      ),
+                              onPressed: () => changePassword(context),
+                            )
+                          : Container(),
+                      AuthenticationService().isCurrentProviderByEmail()
+                          ? Divider(
+                              height: 1,
+                            )
+                          : Container(),
                       CupertinoButton(
                         child: Row(
                           children: [

@@ -169,7 +169,7 @@ class _ChatState extends State<Chat> with TickerProviderStateMixin {
             width: double.infinity,
             color: CupertinoTheme.of(context).barBackgroundColor,
             child: Row(
-              children: <Widget>[
+              children: [
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
@@ -188,7 +188,7 @@ class _ChatState extends State<Chat> with TickerProviderStateMixin {
                 Padding(
                   padding: const EdgeInsets.all(2.0),
                   child: CupertinoButton(
-                    onPressed: _inputTextController.text.isEmpty
+                    onPressed: _inputTextController.text.trim().isEmpty
                         ? null
                         : () {
                             addMessage(context);
