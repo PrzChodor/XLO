@@ -175,6 +175,10 @@ class _AdDetailsState extends State<AdDetails> {
                                   ),
                                   Spacer(),
                                   Builder(builder: (context) {
+                                    if (widget.ad.test)
+                                      return Container(
+                                        height: 48,
+                                      );
                                     if (widget.ad.ownerID ==
                                         _auth.getCurrentUserId()) {
                                       if (widget.ad.archived == false) {
@@ -348,6 +352,8 @@ class _AdDetailsState extends State<AdDetails> {
                                   clipBehavior: Clip.antiAlias,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
+                                    color:
+                                        CupertinoTheme.of(context).primaryColor,
                                   ),
                                   width: 48,
                                   height: 48,
@@ -357,10 +363,10 @@ class _AdDetailsState extends State<AdDetails> {
                                           fit: BoxFit.cover,
                                         )
                                       : Icon(
-                                          CupertinoIcons.person_circle_fill,
+                                          CupertinoIcons.person_fill,
                                           color: CupertinoTheme.of(context)
-                                              .primaryColor,
-                                          size: 48,
+                                              .barBackgroundColor,
+                                          size: 32,
                                         ),
                                 ),
                               ),
