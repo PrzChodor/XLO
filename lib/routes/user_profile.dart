@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:xlo_auction_app/routes/ads_active.dart';
 import 'package:xlo_auction_app/routes/ads_archived.dart';
-import 'package:xlo_auction_app/widgets/passwordConfirmPopup.dart';
+import 'package:xlo_auction_app/widgets/deletionConfirmPopup.dart';
 
 class UserProfile extends StatefulWidget {
   @override

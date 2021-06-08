@@ -132,7 +132,7 @@ class AuthenticationService {
     }
   }
 
-  AuthCredential getCredentialForCurrentUser(String password) {
+  Future<AuthCredential> getCredentialForCurrentUser(String password) async {
     final user = _authenticator.currentUser;
     return EmailAuthProvider.credential(email: user.email, password: password);
   }
@@ -143,11 +143,24 @@ class AuthenticationService {
     await user.reauthenticateWithCredential(credential);
   }
 
-  Future<void> deleteUser() async {
-    try {
-      await _authenticator.currentUser.delete();
-    } catch (e) {
-      print('User must reauthenticate before deleting account');
+  Future<void> signOutFacebookAndGoogle() async {
+    if (_authenticator.currentUser.providerData[0].providerId == 'google.com' ||
+        _authenticator.currentUser.providerData[0].providerId ==
+            'facebook.com') {
+      GoogleSignIn().signOut();
+      FacebookAuth.instance.logOut();
     }
+  }
+
+  bool isCurrentProviderByEmail() {
+    final user = _authenticator.currentUser;
+    if (user.providerData[0].providerId == 'password') {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> deleteUser() async {
+    await _authenticator.currentUser.delete();
   }
 }

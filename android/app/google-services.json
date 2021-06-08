@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "547672813506-ph37r4fo3sfstn3lhfh3mrnl1busu7qo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "xlo.xlo_auction_app",
+            "certificate_hash": "e72f016f89b6dae7724ca6a1c392d0a9b3b6359a"
+          }
+        },
+        {
           "client_id": "547672813506-luh0c4ut8thtksg5gpttn1tfq5cf2q01.apps.googleusercontent.com",
           "client_type": 3
         }
