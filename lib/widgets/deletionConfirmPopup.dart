@@ -69,7 +69,6 @@ class _DeletionConfirmationState extends State<DeletionConfirmation> {
           onPressed: () => {
             archiveDocumentsInBase(),
             deleteAccount(),
-            Navigator.pop(context)
           },
         ),
         CupertinoButton(
@@ -106,14 +105,13 @@ class _DeletionConfirmationState extends State<DeletionConfirmation> {
       try {
         await _auth.deleteUser();
       } catch (e) {
-        print('credentiales');
+        Navigator.pop(context);
         showNotification(context, 'You must sign in again',
             'You need to reauthenticate to delete your account');
         await _auth.signOut();
         return;
       }
-      // _auth.deleteUser();
-      // Navigator.pop(context);
+      Navigator.pop(context);
     }
   }
 

@@ -87,7 +87,7 @@ class _UserProfile extends State<UserProfile> with ScreenLoader<UserProfile> {
                                     'Logged in as',
                                     style: CupertinoTheme.of(context)
                                         .textTheme
-                                        .actionTextStyle,
+                                        .navTitleTextStyle,
                                   ),
                                 ),
                                 SizedBox(
