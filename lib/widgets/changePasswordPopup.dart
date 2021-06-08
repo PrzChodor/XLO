@@ -124,17 +124,25 @@ class _ChangePasswordConfirmation extends State<ChangePasswordConfirmation> {
         await _auth.getCredentialForCurrentUser(_oldPasswordController.text);
     try {
       await _auth.reauthenticateWithRefreshedCredentials(credential);
+      setState(() {
+        _isWrongPasswordErrorShown = false;
+      });
     } catch (e) {
       setState(() {
         oldPasswordCorrect = false;
-        _isWrongPasswordErrorShown = !_isWrongPasswordErrorShown;
+        _isWrongPasswordErrorShown = true;
       });
     }
     if (_newPasswordController.text !=
         _newPasswordConfirmationController.text) {
       setState(() {
         newPasswordTheSame = false;
-        _isPasswordMismatchErrorShown = !_isPasswordMismatchErrorShown;
+        _isPasswordMismatchErrorShown = true;
+      });
+    }
+    else{
+      setState(() {
+        _isPasswordMismatchErrorShown = false;
       });
     }
     if (oldPasswordCorrect && newPasswordTheSame) {
@@ -152,15 +160,14 @@ class _ChangePasswordConfirmation extends State<ChangePasswordConfirmation> {
             if(error.toString().contains('[firebase_auth/unknown]')){
               _passwordChangeErrorController.text = 'Password cannot be empty!';
             }
-            _passwordChangeError = !_passwordChangeError;
+            _passwordChangeError = true;
           });
-          print(error.toString());
         });
       }
       else{
         setState(() {
           _passwordChangeErrorController.text = 'Passwords cannot be the same';
-          _passwordChangeError = !_passwordChangeError;
+          _passwordChangeError =true;
         });
       }
     }

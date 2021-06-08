@@ -21,7 +21,9 @@ class DeletionConfirmation extends StatefulWidget {
 
 class _DeletionConfirmationState extends State<DeletionConfirmation> {
   final _passwordController = TextEditingController();
+  final _passwordMatchController = TextEditingController();
   var _isErrorShown = false;
+  var _isMatchErrorShown = false;
   var _isEmailAccount = false;
 
   @override
@@ -50,6 +52,7 @@ class _DeletionConfirmationState extends State<DeletionConfirmation> {
               padding: EdgeInsets.only(top: 10, bottom: 10),
               child: CupertinoTextField(
                 placeholder: 'Password',
+                obscureText: true,
                 controller: _passwordController,
               ),
             ),
@@ -59,6 +62,21 @@ class _DeletionConfirmationState extends State<DeletionConfirmation> {
                 style: TextStyle(color: CupertinoColors.systemRed),
               ),
               visible: _isErrorShown,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 10, bottom: 10),
+              child: CupertinoTextField(
+                placeholder: 'Repeat Password',
+                obscureText: true,
+                controller: _passwordMatchController,
+              ),
+            ),
+            Visibility(
+              child: Text(
+                'Passwords must match and cannot be empty!',
+                style: TextStyle(color: CupertinoColors.systemRed),
+              ),
+              visible: _isMatchErrorShown,
             )
           ],
         ),
@@ -89,14 +107,28 @@ class _DeletionConfirmationState extends State<DeletionConfirmation> {
     if (_isEmailAccount) {
       final credential =
           await _auth.getCredentialForCurrentUser(_passwordController.text);
-      try {
-        await _auth.reauthenticateWithRefreshedCredentials(credential);
-      } catch (e) {
-        delete = false;
+      if(_passwordController.text==_passwordMatchController.text) {
         setState(() {
-          _isErrorShown = !_isErrorShown;
+          _isMatchErrorShown=false;
+        });
+        try {
+          await _auth.reauthenticateWithRefreshedCredentials(credential);
+          setState(() {
+            _isErrorShown = false;
+          });
+        } catch (e) {
+          delete = false;
+          setState(() {
+            _isErrorShown = true;
+          });
+        }
+      }
+      else{
+        setState(() {
+          _isMatchErrorShown=true;
         });
       }
+
     } else {
       _auth.signOutFacebookAndGoogle();
     }
