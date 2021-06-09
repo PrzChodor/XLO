@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:xlo_auction_app/model/ad.dart';
 import 'package:xlo_auction_app/routes/ad_details.dart';
 import 'package:xlo_auction_app/widgets/ad_item.dart';
+import 'package:xlo_auction_app/widgets/sliver_fill_remaining_box_adapter.dart';
 
 class AdList extends StatefulWidget {
   @override
@@ -89,7 +90,7 @@ class _AdListState extends State<AdList> {
                       onRefresh: () => refreshList(),
                     ),
                     if (_searching)
-                      SliverFillRemaining(
+                      SliverFillRemainingBoxAdapter(
                         child: Center(
                           child: CupertinoActivityIndicator(
                             radius: min(MediaQuery.of(context).size.width * 0.1,
@@ -98,7 +99,7 @@ class _AdListState extends State<AdList> {
                         ),
                       )
                     else if (_ads.isEmpty)
-                      SliverFillRemaining(
+                      SliverFillRemainingBoxAdapter(
                         child: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,

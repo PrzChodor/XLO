@@ -16,6 +16,7 @@ import 'package:xlo_auction_app/widgets/deletionConfirmPopup.dart';
 import 'package:xlo_auction_app/routes/new_ad.dart';
 import 'package:xlo_auction_app/themes/custom_theme.dart';
 import 'package:xlo_auction_app/widgets/notification.dart';
+import 'package:xlo_auction_app/widgets/sliver_fill_remaining_box_adapter.dart';
 
 class UserProfile extends StatefulWidget {
   @override
@@ -29,226 +30,201 @@ class _UserProfile extends State<UserProfile> with ScreenLoader<UserProfile> {
     return WillPopScope(
       child: CupertinoPageScaffold(
         child: SafeArea(
-          child: NestedScrollView(
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
-              return [
-                CupertinoSliverNavigationBar(
-                  largeTitle: Text('Profile'),
-                )
-              ];
-            },
-            body: ListView(
-              padding: const EdgeInsets.all(16.0),
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: CupertinoTheme.of(context).barBackgroundColor,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        Container(
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: CupertinoTheme.of(context).primaryColor,
-                          ),
-                          width: 96,
-                          height: 96,
-                          child: GestureDetector(
-
-                              child: _auth.getCurrentUserPhoto() != null
-                                  ? Image.network(
-                                      _auth.getCurrentUserPhoto(),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Icon(
-                                      CupertinoIcons.person_fill,
-                                      color: CupertinoTheme.of(context)
-                                          .barBackgroundColor,
-                                      size: 80,
-                                    ),
-                              onTap: () async {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                await this.performFuture(() => changePhoto());
-                              }),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 16.0),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: Text(
-                                    'Logged in as',
-                                    style: CupertinoTheme.of(context)
-                                        .textTheme
-                                        .navTitleTextStyle,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 4,
-                                ),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: Text(
-                                    _auth.getCurrentUsername(),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: CupertinoTheme.of(context)
-                                        .textTheme
-                                        .navLargeTitleTextStyle
-                                        .merge(TextStyle(
-                                            fontSize: 28,
-                                            fontWeight: FontWeight.bold)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      color: CupertinoTheme.of(context).barBackgroundColor,
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: Column(
-                      children: [
-                        CupertinoButton(
-                          child: Row(
-                            children: [
-                              Icon(CupertinoIcons.add),
-                              SizedBox(
-                                width: 16,
-                              ),
-                              Expanded(
-                                child: Text('Add new advertisement'),
-                              ),
-                            ],
-                          ),
-                          onPressed: () {
-                            FocusScope.of(context).unfocus();
-                            Navigator.of(context).push(CupertinoPageRoute(
-                                builder: (context) => NewAd()));
-                          },
-                        ),
-                        Divider(
-                          height: 1,
-                        ),
-                        CupertinoButton(
-                          child: Row(
-                            children: [
-                              Icon(CupertinoIcons.list_bullet),
-                              SizedBox(
-                                width: 16,
-                              ),
-                              Expanded(
-                                child: Text('Active'),
-                              ),
-                            ],
-                          ),
-                          onPressed: () {
-                            FocusScope.of(context).unfocus();
-                            Navigator.of(context, rootNavigator: true).push(
-                                CupertinoPageRoute(
-                                    builder: (context) => AdsActive()));
-                          },
-                        ),
-                        Divider(
-                          height: 1,
-                        ),
-                        CupertinoButton(
-                          child: Row(
-                            children: [
-                              Icon(CupertinoIcons.archivebox),
-                              SizedBox(
-                                width: 16,
-                              ),
-                              Expanded(
-                                child: Text('Archived'),
-                              ),
-                            ],
-                          ),
-                          onPressed: () {
-                            FocusScope.of(context).unfocus();
-                            Navigator.of(context, rootNavigator: true).push(
-                                CupertinoPageRoute(
-                                    builder: (context) => AdsArchived()));
-                          },
-                        ),
-                        Divider(
-                          height: 1,
-                        ),
-                        CupertinoButton(
-                          child: Row(
-                            children: [
-                              Icon(CupertinoIcons.paintbrush),
-                              SizedBox(
-                                width: 16,
-                              ),
-                              Expanded(
-                                child: Text('Select theme'),
-                              ),
-                            ],
-                          ),
-                          onPressed: () => showThemePicker(context),
-                        ),
-                      ],
-                    )),
-                SizedBox(
-                  height: 16,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: CupertinoTheme.of(context).barBackgroundColor,
-                  ),
-                  clipBehavior: Clip.antiAlias,
+          child: CustomScrollView(
+            slivers: [
+              CupertinoSliverNavigationBar(
+                largeTitle: Text('Profile'),
+              ),
+              SliverFillRemainingBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      CupertinoButton(
-                        child: Row(
-                          children: [
-                            Icon(
-                              CupertinoIcons.power,
-                              color: CupertinoColors.destructiveRed,
-                            ),
-                            SizedBox(
-                              width: 16,
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Log out',
-                                style: TextStyle(
-                                    color: CupertinoColors.destructiveRed),
-                              ),
-                            ),
-                          ],
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: CupertinoTheme.of(context).barBackgroundColor,
                         ),
-                        onPressed: () => _auth.signOut(),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            children: [
+                              Container(
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color:
+                                      CupertinoTheme.of(context).primaryColor,
+                                ),
+                                width: 96,
+                                height: 96,
+                                child: GestureDetector(
+                                    child: _auth.getCurrentUserPhoto() != null
+                                        ? Image.network(
+                                            _auth.getCurrentUserPhoto(),
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Icon(
+                                            CupertinoIcons.person_fill,
+                                            color: CupertinoTheme.of(context)
+                                                .barBackgroundColor,
+                                            size: 80,
+                                          ),
+                                    onTap: () async {
+                                      FocusScope.of(context)
+                                          .requestFocus(FocusNode());
+                                      await this
+                                          .performFuture(() => changePhoto());
+                                    }),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 16.0),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: Text(
+                                          'Logged in as',
+                                          style: CupertinoTheme.of(context)
+                                              .textTheme
+                                              .navTitleTextStyle,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: Text(
+                                          _auth.getCurrentUsername(),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: CupertinoTheme.of(context)
+                                              .textTheme
+                                              .navLargeTitleTextStyle
+                                              .merge(TextStyle(
+                                                  fontSize: 28,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                      Divider(
-                        height: 1,
+                      SizedBox(
+                        height: 16,
                       ),
-                      AuthenticationService().isCurrentProviderByEmail()
-                          ? CupertinoButton(
+                      Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            color:
+                                CupertinoTheme.of(context).barBackgroundColor,
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: Column(
+                            children: [
+                              CupertinoButton(
+                                child: Row(
+                                  children: [
+                                    Icon(CupertinoIcons.add),
+                                    SizedBox(
+                                      width: 16,
+                                    ),
+                                    Expanded(
+                                      child: Text('Add new advertisement'),
+                                    ),
+                                  ],
+                                ),
+                                onPressed: () {
+                                  FocusScope.of(context).unfocus();
+                                  Navigator.of(context).push(CupertinoPageRoute(
+                                      builder: (context) => NewAd()));
+                                },
+                              ),
+                              Divider(
+                                height: 1,
+                              ),
+                              CupertinoButton(
+                                child: Row(
+                                  children: [
+                                    Icon(CupertinoIcons.list_bullet),
+                                    SizedBox(
+                                      width: 16,
+                                    ),
+                                    Expanded(
+                                      child: Text('Active'),
+                                    ),
+                                  ],
+                                ),
+                                onPressed: () {
+                                  FocusScope.of(context).unfocus();
+                                  Navigator.of(context, rootNavigator: true)
+                                      .push(CupertinoPageRoute(
+                                          builder: (context) => AdsActive()));
+                                },
+                              ),
+                              Divider(
+                                height: 1,
+                              ),
+                              CupertinoButton(
+                                child: Row(
+                                  children: [
+                                    Icon(CupertinoIcons.archivebox),
+                                    SizedBox(
+                                      width: 16,
+                                    ),
+                                    Expanded(
+                                      child: Text('Archived'),
+                                    ),
+                                  ],
+                                ),
+                                onPressed: () {
+                                  FocusScope.of(context).unfocus();
+                                  Navigator.of(context, rootNavigator: true)
+                                      .push(CupertinoPageRoute(
+                                          builder: (context) => AdsArchived()));
+                                },
+                              ),
+                              Divider(
+                                height: 1,
+                              ),
+                              CupertinoButton(
+                                child: Row(
+                                  children: [
+                                    Icon(CupertinoIcons.paintbrush),
+                                    SizedBox(
+                                      width: 16,
+                                    ),
+                                    Expanded(
+                                      child: Text('Select theme'),
+                                    ),
+                                  ],
+                                ),
+                                onPressed: () => showThemePicker(context),
+                              ),
+                            ],
+                          )),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: CupertinoTheme.of(context).barBackgroundColor,
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: Column(
+                          children: [
+                            CupertinoButton(
                               child: Row(
                                 children: [
                                   Icon(
-                                    CupertinoIcons.lock,
+                                    CupertinoIcons.power,
                                     color: CupertinoColors.destructiveRed,
                                   ),
                                   SizedBox(
@@ -256,7 +232,7 @@ class _UserProfile extends State<UserProfile> with ScreenLoader<UserProfile> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      'Change password',
+                                      'Log out',
                                       style: TextStyle(
                                           color:
                                               CupertinoColors.destructiveRed),
@@ -264,40 +240,70 @@ class _UserProfile extends State<UserProfile> with ScreenLoader<UserProfile> {
                                   ),
                                 ],
                               ),
-                              onPressed: () => changePassword(context),
-                            )
-                          : Container(),
-                      AuthenticationService().isCurrentProviderByEmail()
-                          ? Divider(
+                              onPressed: () => _auth.signOut(),
+                            ),
+                            Divider(
                               height: 1,
-                            )
-                          : Container(),
-                      CupertinoButton(
-                        child: Row(
-                          children: [
-                            Icon(
-                              CupertinoIcons.delete,
-                              color: CupertinoColors.destructiveRed,
                             ),
-                            SizedBox(
-                              width: 16,
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Delete account',
-                                style: TextStyle(
-                                    color: CupertinoColors.destructiveRed),
+                            AuthenticationService().isCurrentProviderByEmail()
+                                ? CupertinoButton(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.lock,
+                                          color: CupertinoColors.destructiveRed,
+                                        ),
+                                        SizedBox(
+                                          width: 16,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            'Change password',
+                                            style: TextStyle(
+                                                color: CupertinoColors
+                                                    .destructiveRed),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    onPressed: () => changePassword(context),
+                                  )
+                                : Container(),
+                            AuthenticationService().isCurrentProviderByEmail()
+                                ? Divider(
+                                    height: 1,
+                                  )
+                                : Container(),
+                            CupertinoButton(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    CupertinoIcons.delete,
+                                    color: CupertinoColors.destructiveRed,
+                                  ),
+                                  SizedBox(
+                                    width: 16,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      'Delete account',
+                                      style: TextStyle(
+                                          color:
+                                              CupertinoColors.destructiveRed),
+                                    ),
+                                  ),
+                                ],
                               ),
+                              onPressed: () => deleteUser(context),
                             ),
                           ],
                         ),
-                        onPressed: () => deleteUser(context),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
+              )
+            ],
           ),
         ),
       ),

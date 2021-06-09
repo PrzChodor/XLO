@@ -7,6 +7,7 @@ import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:xlo_auction_app/model/ad.dart';
 import 'package:xlo_auction_app/routes/ad_details.dart';
 import 'package:xlo_auction_app/widgets/ad_item.dart';
+import 'package:xlo_auction_app/widgets/sliver_fill_remaining_box_adapter.dart';
 
 class Watchlist extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class Watchlist extends StatefulWidget {
 
 class _WatchlistState extends State<Watchlist> {
   List<Ad> _ads = [];
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -27,45 +29,50 @@ class _WatchlistState extends State<Watchlist> {
       builder: (context) {
         return CupertinoPageScaffold(
             child: SafeArea(
-          child: StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('ads')
-                  .where('bookmarkedBy',
-                      arrayContains: AuthenticationService().getCurrentUserId())
-                  .snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: CupertinoActivityIndicator(
-                      radius: min(MediaQuery.of(context).size.width * 0.1,
-                          MediaQuery.of(context).size.height * 0.1),
-                    ),
-                  );
-                }
-                _ads = snapshot.data.docs
-                    .map<Ad>((a) => Ad(
-                        a.id,
-                        a['ownerID'],
-                        a['title'],
-                        a['description'],
-                        a['images'],
-                        a['date'],
-                        a['username'],
-                        a['archived'],
-                        a['price'],
-                        a['place'],
-                        false,
-                        a['bookmarkedBy']))
-                    .toList();
-                _ads.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+          child: CupertinoScrollbar(
+            child: CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                CupertinoSliverNavigationBar(
+                  largeTitle: Text('Watchlist'),
+                ),
+                StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('ads')
+                        .where('bookmarkedBy',
+                            arrayContains:
+                                AuthenticationService().getCurrentUserId())
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData) {
+                        return SliverFillRemainingBoxAdapter(
+                          child: Center(
+                            child: CupertinoActivityIndicator(
+                              radius: min(
+                                  MediaQuery.of(context).size.width * 0.1,
+                                  MediaQuery.of(context).size.height * 0.1),
+                            ),
+                          ),
+                        );
+                      }
+                      _ads = snapshot.data.docs
+                          .map<Ad>((a) => Ad(
+                              a.id,
+                              a['ownerID'],
+                              a['title'],
+                              a['description'],
+                              a['images'],
+                              a['date'],
+                              a['username'],
+                              a['archived'],
+                              a['price'],
+                              a['place'],
+                              false,
+                              a['bookmarkedBy']))
+                          .toList();
+                      _ads.sort((a, b) => b.dateTime.compareTo(a.dateTime));
 
-                return CupertinoScrollbar(
-                  child: CustomScrollView(
-                    slivers: [
-                      CupertinoSliverNavigationBar(
-                        largeTitle: Text('Watchlist'),
-                      ),
-                      SliverPadding(
+                      return SliverPadding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         sliver: SliverList(
                           delegate: SliverChildBuilderDelegate(
@@ -103,11 +110,11 @@ class _WatchlistState extends State<Watchlist> {
                             childCount: _ads.length,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
+                      );
+                    }),
+              ],
+            ),
+          ),
         ));
       },
     );

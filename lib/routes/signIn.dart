@@ -240,9 +240,6 @@ class _SignInState extends State<SignIn> {
     }
     if (isSignedIn) {
       Navigator.pushNamed(context, '/');
-      if (!authentication.isEmailVerified) {
-        showNotification(context, 'Verify email', 'Verify email');
-      }
     }
   }
 }
