@@ -224,12 +224,12 @@ class _ChatState extends State<Chat> with TickerProviderStateMixin {
 
     _senderChats.set({
       'username': widget.receiverUsername,
-      'message': _inputTextController.text,
+      'message': _inputTextController.text.trim(),
       'date': DateTime.now(),
     });
     _receiverChats.set({
       'username': widget.senderUsername,
-      'message': _inputTextController.text,
+      'message': _inputTextController.text.trim(),
       'date': DateTime.now(),
     });
 
@@ -241,12 +241,12 @@ class _ChatState extends State<Chat> with TickerProviderStateMixin {
     var batch = _firestore.batch();
     batch.set(_senderChatDocument, {
       'isSender': true,
-      'message': _inputTextController.text,
+      'message': _inputTextController.text.trim(),
       'date': DateTime.now(),
     });
     batch.set(_receiverChatDocument, {
       'isSender': false,
-      'message': _inputTextController.text,
+      'message': _inputTextController.text.trim(),
       'date': DateTime.now(),
     });
     batch.commit().whenComplete(() => print('chat messages added to firebase'));
