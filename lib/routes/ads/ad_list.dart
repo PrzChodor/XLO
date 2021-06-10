@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:xlo_auction_app/model/ad.dart';
-import 'package:xlo_auction_app/routes/ad_details.dart';
+import 'package:xlo_auction_app/routes/ads/ad_details.dart';
 import 'package:xlo_auction_app/widgets/ad_item.dart';
 import 'package:xlo_auction_app/widgets/sliver_fill_remaining_box_adapter.dart';
 

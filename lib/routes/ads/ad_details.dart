@@ -7,9 +7,9 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:xlo_auction_app/model/ad.dart';
 import 'package:intl/intl.dart';
-import 'package:xlo_auction_app/routes/chat.dart';
 import 'package:xlo_auction_app/routes/edit_ad.dart';
-import 'package:xlo_auction_app/routes/fullscreen_gallery.dart';
+import 'package:xlo_auction_app/routes/chat/chat.dart';
+import 'package:xlo_auction_app/routes/ads/fullscreen_gallery.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +28,6 @@ class _AdDetailsState extends State<AdDetails> {
   String profilePictureUrl = '';
   double currentPage = 0;
   List<String> images;
-
 
   @override
   void dispose() {
@@ -446,8 +445,7 @@ class _AdDetailsState extends State<AdDetails> {
                                     color:
                                         CupertinoTheme.of(context).primaryColor,
                                   ),
-                                  onPressed: () async{
-                                  },
+                                  onPressed: () async {},
                                 ),
                               ),
                               Text(widget.ad.place,
