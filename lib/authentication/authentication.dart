@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:uuid/uuid.dart';
@@ -131,7 +132,7 @@ class AuthenticationService {
   Future<String> getUserPhoto(String uid) async {
     try {
       return await _storage.ref('$uid/profile_photo').getDownloadURL();
-    } catch (_) {
+    } catch (err) {
       return '';
     }
   }

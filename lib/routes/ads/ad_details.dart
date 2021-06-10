@@ -28,6 +28,7 @@ class _AdDetailsState extends State<AdDetails> {
   String profilePictureUrl = '';
   double currentPage = 0;
   List<String> images;
+  bool areImagesLocal = false;
 
   @override
   void dispose() {
@@ -37,8 +38,9 @@ class _AdDetailsState extends State<AdDetails> {
 
   @override
   void initState() {
-    if (widget.ad.test) {
+    if (widget.ad.test && widget.ad.images[0] is Asset) {
       images = [];
+      areImagesLocal = true;
       for (Asset image in widget.ad.images) {
         FlutterAbsolutePath.getAbsolutePath(image.identifier)
             .then((value) => setState(() {
@@ -46,6 +48,7 @@ class _AdDetailsState extends State<AdDetails> {
                 }));
       }
     } else {
+      areImagesLocal = false;
       images = List<String>.from(widget.ad.images);
     }
     galleryController.addListener(() {
@@ -95,7 +98,7 @@ class _AdDetailsState extends State<AdDetails> {
                                 GalleryPage(
                                   images: images,
                                   index: i,
-                                  test: widget.ad.test,
+                                  areImagesLocal: areImagesLocal,
                                 )
                             ],
                           ),
@@ -290,13 +293,14 @@ class _AdDetailsState extends State<AdDetails> {
                                     if (widget.ad.ownerID ==
                                         _auth.getCurrentUserId()) {
                                       return CupertinoButton(
-                                        child: Icon(CupertinoIcons.gear_alt),
+                                        child: Icon(CupertinoIcons.gear),
                                         onPressed: () {
                                           FocusScope.of(context).unfocus();
-                                          Navigator.of(context).push(
-                                              CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      EditAd()));
+                                          Navigator.of(context)
+                                              .push(CupertinoPageRoute(
+                                                  builder: (context) => EditAd(
+                                                        originalAd: widget.ad,
+                                                      )));
                                         },
                                       );
                                     } else {
@@ -433,19 +437,17 @@ class _AdDetailsState extends State<AdDetails> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(1.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: CupertinoButton(
-                                  child: Icon(
-                                    CupertinoIcons.map_fill,
-                                    size: 48,
-                                    color:
-                                        CupertinoTheme.of(context).primaryColor,
-                                  ),
-                                  onPressed: () async {},
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 8.0),
+                                child: Icon(
+                                  CupertinoIcons.map_fill,
+                                  color:
+                                      CupertinoTheme.of(context).primaryColor,
+                                  size: 48,
                                 ),
                               ),
                               Text(widget.ad.place,
@@ -487,7 +489,9 @@ class _AdDetailsState extends State<AdDetails> {
 
     final _firestore = context.read<FirebaseFirestore>();
     CollectionReference _ads = _firestore.collection('ads');
-    _ads.doc(widget.ad.adID).update({'archived': true, 'date': DateTime.now()});
+    _ads
+        .doc(widget.ad.adID)
+        .update({'archived': true, 'date': DateTime.now(), 'bookmarkedBy': []});
   }
 
   removeCurrentFromArchive(BuildContext context) async {
@@ -542,9 +546,9 @@ class _AdDetailsState extends State<AdDetails> {
 class GalleryPage extends StatelessWidget {
   final List<String> images;
   final int index;
-  final bool test;
+  final bool areImagesLocal;
 
-  GalleryPage({this.images, this.index, this.test});
+  GalleryPage({this.images, this.index, this.areImagesLocal});
 
   @override
   Widget build(BuildContext context) {
@@ -552,8 +556,9 @@ class GalleryPage extends StatelessWidget {
       onTap: () => Navigator.push(
           context,
           CupertinoPageRoute(
-              builder: (context) => FullscreenGallery(images, index, test))),
-      child: test
+              builder: (context) =>
+                  FullscreenGallery(images, index, areImagesLocal))),
+      child: areImagesLocal
           ? Image.file(
               File(images[index]),
               width: MediaQuery.of(context).size.width,

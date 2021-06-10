@@ -59,7 +59,7 @@ class _ChatListItemState extends State<ChatListItem> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Column(
                 children: [
                   Row(

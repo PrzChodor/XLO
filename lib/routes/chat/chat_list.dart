@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
-import 'package:xlo_auction_app/model/chat_list_item.dart';
+import 'package:xlo_auction_app/widgets/chat_list_item.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/widgets/sliver_fill_remaining_box_adapter.dart';
 import 'package:xlo_auction_app/routes/chat/chat.dart';

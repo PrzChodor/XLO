@@ -6,9 +6,9 @@ import 'package:vector_math/vector_math_64.dart';
 class FullscreenGallery extends StatefulWidget {
   final List<String> images;
   final int index;
-  final bool test;
+  final bool areImagesLocal;
 
-  FullscreenGallery(this.images, this.index, this.test);
+  FullscreenGallery(this.images, this.index, this.areImagesLocal);
 
   @override
   _FullscreenGalleryState createState() => _FullscreenGalleryState();
@@ -91,7 +91,7 @@ class _FullscreenGalleryState extends State<FullscreenGallery> {
                             transform: Matrix4.diagonal3(
                                 Vector3(_scale, _scale, _scale)),
                             alignment: getZoomAlignment(),
-                            child: widget.test
+                            child: widget.areImagesLocal
                                 ? Image.file(
                                     File(image),
                                     fit: BoxFit.contain,
