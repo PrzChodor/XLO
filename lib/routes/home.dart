@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:xlo_auction_app/routes/watchlist.dart';
-import 'package:xlo_auction_app/routes/ad_list.dart';
-import 'package:xlo_auction_app/routes/new_ad.dart';
-import 'package:xlo_auction_app/routes/user_profile.dart';
+import 'package:xlo_auction_app/routes/ads/watchlist.dart';
+import 'package:xlo_auction_app/routes/ads/ad_list.dart';
+import 'package:xlo_auction_app/routes/ads/new_ad.dart';
+import 'package:xlo_auction_app/routes/authentication/user_profile.dart';
 
-import 'chat_list.dart';
+import 'chat/chat_list.dart';
 
 class HomePage extends StatefulWidget {
   @override

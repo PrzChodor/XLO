@@ -12,7 +12,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:xlo_auction_app/model/ad.dart';
-import 'package:xlo_auction_app/routes/ad_details.dart';
+import 'package:xlo_auction_app/routes/ads/ad_details.dart';
 import 'package:xlo_auction_app/widgets/notification.dart';
 import 'package:uuid/uuid.dart';
 import 'package:screen_loader/screen_loader.dart';

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:xlo_auction_app/model/chat_list_item.dart';
 import 'package:provider/provider.dart';
-import 'chat.dart';
+import 'package:xlo_auction_app/routes/chat/chat.dart';
 
 class ChatList extends StatefulWidget {
   @override

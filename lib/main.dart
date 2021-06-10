@@ -8,10 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-import 'package:xlo_auction_app/routes/email_verification.dart';
-import 'package:xlo_auction_app/routes/register.dart';
-import 'package:xlo_auction_app/routes/signIn.dart';
-import 'package:xlo_auction_app/routes/home.dart';
+import 'package:xlo_auction_app/routes/authentication/email_verification.dart';
+import 'package:xlo_auction_app/routes/authentication/register.dart';
+import 'package:xlo_auction_app/routes/authentication/signIn.dart';
 import 'package:xlo_auction_app/themes/custom_theme.dart';
 
 SharedPreferences prefs;
