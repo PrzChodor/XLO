@@ -7,7 +7,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:xlo_auction_app/authentication/authentication.dart';
 import 'package:xlo_auction_app/model/ad.dart';
 import 'package:intl/intl.dart';
-import 'package:xlo_auction_app/routes/edit_ad.dart';
+import 'package:xlo_auction_app/routes/ads/edit_ad.dart';
 import 'package:xlo_auction_app/routes/chat/chat.dart';
 import 'package:xlo_auction_app/routes/ads/fullscreen_gallery.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';

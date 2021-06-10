@@ -9,13 +9,12 @@ import 'package:uuid/uuid.dart';
 
 var uuid = Uuid();
 
-
 class EditAd extends StatefulWidget {
   @override
   _EditAdState createState() => _EditAdState();
 }
 
-class _EditAdState extends State<EditAd> with ScreenLoader<EditAd>{
+class _EditAdState extends State<EditAd> with ScreenLoader<EditAd> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
@@ -95,33 +94,33 @@ class _EditAdState extends State<EditAd> with ScreenLoader<EditAd>{
                       child: Container(
                         width: 250,
                         child: CupertinoButton(
-                            child: Text('Preview advertisement'),
-                            // onPressed: () {
-                            //   if (isNewAdValid()) {
-                            //     FocusScope.of(context)
-                            //         .requestFocus(FocusNode());
-                            //     Navigator.of(context, rootNavigator: true).push(
-                            //         CupertinoPageRoute(
-                            //             builder: (context) => AdDetails(Ad(
-                            //                 '',
-                            //                 context
-                            //                     .read<AuthenticationService>()
-                            //                     .getCurrentUserId(),
-                            //                 _titleController.text.trim(),
-                            //                 _descriptionController.text.trim(),
-                            //                 _images,
-                            //                 Timestamp.fromDate(DateTime.now()),
-                            //                 context
-                            //                     .read<AuthenticationService>()
-                            //                     .getCurrentUsername(),
-                            //                 false,
-                            //                 _priceController.text,
-                            //                 _locationController.text,
-                            //                 true,
-                            //                 _bookmarkedBy))));
-                            //   }
-                            // }
-                            ),
+                          child: Text('Preview advertisement'),
+                          // onPressed: () {
+                          //   if (isNewAdValid()) {
+                          //     FocusScope.of(context)
+                          //         .requestFocus(FocusNode());
+                          //     Navigator.of(context, rootNavigator: true).push(
+                          //         CupertinoPageRoute(
+                          //             builder: (context) => AdDetails(Ad(
+                          //                 '',
+                          //                 context
+                          //                     .read<AuthenticationService>()
+                          //                     .getCurrentUserId(),
+                          //                 _titleController.text.trim(),
+                          //                 _descriptionController.text.trim(),
+                          //                 _images,
+                          //                 Timestamp.fromDate(DateTime.now()),
+                          //                 context
+                          //                     .read<AuthenticationService>()
+                          //                     .getCurrentUsername(),
+                          //                 false,
+                          //                 _priceController.text,
+                          //                 _locationController.text,
+                          //                 true,
+                          //                 _bookmarkedBy))));
+                          //   }
+                          // }
+                        ),
                       ),
                     ),
                     Padding(
@@ -149,7 +148,6 @@ class _EditAdState extends State<EditAd> with ScreenLoader<EditAd>{
         return !isLoading;
       },
     );
-
   }
 
   loader() {
